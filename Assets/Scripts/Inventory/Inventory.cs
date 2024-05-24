@@ -1,8 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using SDVA.Saving;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace SDVA.InventorySystem
 {
@@ -28,12 +28,7 @@ namespace SDVA.InventorySystem
             public int number;
         }
 
-        // PUBLIC
-
-        /// <summary>
-        /// Broadcasts when the items in the slots are added/removed.
-        /// </summary>
-        public event Action InventoryUpdated;
+        // STATIC METHODS
 
         /// <summary>
         /// Convenience for getting the player's inventory.
@@ -44,85 +39,74 @@ namespace SDVA.InventorySystem
             return player.GetComponent<Inventory>();
         }
 
-        /// <summary>
-        /// Could this item fit anywhere in the inventory?
-        /// </summary>
-        public bool HasSpaceFor(BaseItem item)
-        {
-            return FindSlot(item) >= 0;
-        }
+        // PUBLIC
 
         /// <summary>
-        /// How many slots are in the inventory?
+        /// Broadcasts when the items in the slots are added/removed.
         /// </summary>
-        public int GetSize()
-        {
-            return slots.Length;
-        }
+        public event Action InventoryUpdated;
+
+        /// <returns>Whether the given item can fit anywhere in the inventory.</returns>
+        public bool HasSpaceFor(BaseItem item) => !(FindSlot(item) < 0);
+
+        /// <returns>Number of slots in inventory.</returns>
+        public int GetSize() => slots.Length;
 
         /// <summary>
         /// Attempt to add the items to the first available slot.
         /// </summary>
         /// <param name="item">The item to add.</param>
         /// <param name="number">The number to add.</param>
-        /// <returns>Whether or not the item could be added.</returns>
-        public bool AddToFirstEmptySlot(BaseItem item, int number)
+        /// <returns>Number of items added to slot.</returns>
+        public int AddToAnySlot(BaseItem item, int number)
         {
-            int i = FindSlot(item);
+            int slotNum = FindSlot(item);
+            if (slotNum < 0) { return 0; }
 
-            if (i < 0)
-            {
-                return false;
-            }
-
-            slots[i].item = item;
-            slots[i].number += number;
-            InventoryUpdated?.Invoke();
-            return true;
+            return AddItemsToSlot(slotNum, item, number);
         }
 
         /// <summary>
-        /// Is there an instance of the item in the inventory?
+        /// How many items of type item are in the inventory?
         /// </summary>
-        public bool HasItem(BaseItem item)
+        /// <param name="item">The item to search for.</param>
+        /// <returns>Number of items of given type contained in inventory, 0 if none were found.</returns>
+        public int GetItemsContained(BaseItem item)
         {
+            var total = 0;
             for (int i = 0; i < slots.Length; i++)
             {
                 if (ReferenceEquals(slots[i].item, item))
                 {
-                    return true;
+                    total += slots[i].number;
                 }
             }
-            return false;
+            return total;
         }
 
-        /// <summary>
-        /// Return the item type in the given slot.
-        /// </summary>
-        public BaseItem GetItemInSlot(int slot)
+        /// <returns>The item type in the given slot.</returns>
+        public BaseItem GetItemInSlot(int slotNum)
         {
-            return slots[slot].item;
+            return slots[slotNum].item;
         }
 
-        /// <summary>
-        /// Get the number of items in the given slot.
-        /// </summary>
-        public int GetNumberInSlot(int slot)
+        /// <returns>The number of items in the given slot.</returns>
+        public int GetNumberInSlot(int slotNum)
         {
-            return slots[slot].number;
+            return slots[slotNum].number;
         }
 
         /// <summary>
         /// Remove a number of items from the given slot. Will never remove more
         /// that there are.
         /// </summary>
-        public void RemoveFromSlot(int slot, int number)
+        public void RemoveFromSlot(int slotNum, int number)
         {
-            slots[slot].number -= number;
-            if (slots[slot].number <= 0)
+            slots[slotNum].number -= number;
+            if (slots[slotNum].number <= 0)
             {
-                slots[slot].number = 0;
-                slots[slot].item = null;
+                slots[slotNum].number = 0;
+                slots[slotNum].item = null;
             }
             InventoryUpdated?.Invoke();
         }
@@ -132,40 +116,55 @@ namespace SDVA.InventorySystem
         /// a stack of this type, it will add to the existing stack. Otherwise,
         /// it will be added to the first empty slot.
         /// </summary>
-        /// <param name="slot">The slot to attempt to add to.</param>
+        /// <param name="slotNum">The slot to attempt to add to.</param>
         /// <param name="item">The item type to add.</param>
         /// <param name="number">The number of items to add.</param>
-        /// <returns>True if the item was added anywhere in the inventory.</returns>
-        public bool AddItemToSlot(int slot, BaseItem item, int number)
+        /// <returns>Number of items added to slot.</returns>
+        public int AddItemsToSlot(int slotNum, BaseItem item, int number)
         {
-            if (slots[slot].item != null)
+            var slot = slots[slotNum];
+            if (slot.item != null)
             {
-                return AddToFirstEmptySlot(item, number); ;
+                if (ReferenceEquals(slot.item, item))
+                {
+                    var stackSpaceRemaining = slot.item.GetMaxStackSize() - slot.number;
+                    var itemsAdded = Mathf.Clamp(number, 0, stackSpaceRemaining);
+                    
+                    slot.number += itemsAdded;
+                    InventoryUpdated?.Invoke();
+                    return itemsAdded;
+                }
+                else
+                {
+                    return 0;
+                }
             }
-
-            var i = FindStack(item);
-            if (i >= 0)
+            else
             {
-                slot = i;
+                var stackSpaceRemaining = slot.item.GetMaxStackSize();
+                var itemsAdded = Mathf.Clamp(number, 0, stackSpaceRemaining);
+                
+                slot.item = item;
+                slot.number = itemsAdded;
+                InventoryUpdated?.Invoke();
+                return itemsAdded;
             }
-
-            slots[slot].item = item;
-            slots[slot].number += number;
-            InventoryUpdated?.Invoke();
-            return true;
         }
 
-        // PRIVATE
+        // LIFECYCLE METHODS
 
         private void Awake()
         {
             slots = new InventorySlot[inventorySize];
         }
 
+        // PRIVATE
+
         /// <summary>
         /// Find a slot that can accomodate the given item.
+        /// Will find a matching stack with space remaining or an empty slot.
         /// </summary>
-        /// <returns>-1 if no slot is found.</returns>
+        /// <returns>Slot index, or -1 if no slot is found.</returns>
         private int FindSlot(BaseItem item)
         {
             int i = FindStack(item);
@@ -179,7 +178,7 @@ namespace SDVA.InventorySystem
         /// <summary>
         /// Find an empty slot.
         /// </summary>
-        /// <returns>-1 if all slots are full.</returns>
+        /// <returns>Slot index, or -1 if all slots are full.</returns>
         private int FindEmptySlot()
         {
             for (int i = 0; i < slots.Length; i++)
@@ -193,19 +192,15 @@ namespace SDVA.InventorySystem
         }
 
         /// <summary>
-        /// Find an existing stack of this item type.
+        /// Find an existing stack of this item type that has stack space remaining.
         /// </summary>
-        /// <returns>-1 if no stack exists or if the item is not stackable.</returns>
+        /// <returns>Slot index, or -1 if no stack exists.</returns>
         private int FindStack(BaseItem item)
         {
-            if (!item.IsStackable())
-            {
-                return -1;
-            }
-
             for (int i = 0; i < slots.Length; i++)
             {
-                if (object.ReferenceEquals(slots[i].item, item))
+                if (ReferenceEquals(slots[i].item, item)
+                    && slots[i].number < item.GetMaxStackSize())
                 {
                     return i;
                 }
