@@ -1,5 +1,4 @@
 using System.Collections;
-using ModTool.Shared;
 using UnityEngine;
 
 namespace SDVA.Utils.UI
@@ -11,63 +10,45 @@ namespace SDVA.Utils.UI
     /// </summary>
     public abstract class Tooltip : MonoBehaviour
     {
-        // PRIVATE STATE
-        private bool followMouse = true;
-
-        // PUBLIC
-
-        /// <summary>
-        /// Anchors this tooltip's position.
-        /// </summary>
-        /// <param name="anchorRect">The UI element to anchor the tooltip to. Null by default.
-        /// When null, the tooltip is anchored to the cursor.</param>
-        public void Anchor(RectTransform anchorRect)
-        {
-            followMouse = false;
-            StartCoroutine(PositionTooltip(anchorRect));
-        }
-
         // LIFECYCLE
 
-        void Update()
+        private void Awake()
         {
-            if (followMouse)
-            {
-                StartCoroutine(PositionTooltip());
-            }
+            GetComponentInChildren<CanvasGroup>().alpha = 0f;
+            StartCoroutine(FollowMouse());
         }
 
         // PRIVATE
 
-        private IEnumerator PositionTooltip(RectTransform anchorRect = null)
+        private IEnumerator FollowMouse()
         {
+            yield return new WaitForSecondsRealtime(0.8f);
+            PositionTooltip();
+            GetComponentInChildren<CanvasGroup>().alpha = 1f;
             yield return new WaitForEndOfFrame();
-            // Required to ensure corners are updated by positioning elements.
-            Canvas.ForceUpdateCanvases();
-            Debug.Log("Starting to position");
+            while (true)
+            {
+                PositionTooltip();
+                yield return new WaitForEndOfFrame();
+            }
+        }
 
+        private void PositionTooltip()
+        {
             var corners = new Vector3[4];
             GetComponent<RectTransform>().GetWorldCorners(corners);
-            var tooltipSize = new Vector2(Mathf.Abs(corners[1].x -corners[2].x), Mathf.Abs(corners[0].y -corners[1].y));
+            var tooltipSize = new Vector2(Mathf.Abs(corners[1].x - corners[2].x), Mathf.Abs(corners[0].y - corners[1].y));
+            var mPos = Input.mousePosition;
 
-            var anchorCorners = new Vector3[4]; // 0:BL, 1: TL, 2:TR, 3:BR
-            if (anchorRect == null)
-            {
-                var mPos = Input.mousePosition;
-                anchorCorners = new Vector3[] {mPos, mPos, mPos, mPos};
-            }
-            else { anchorRect.GetWorldCorners(anchorCorners); }
-
-            var left = anchorCorners[3].x + tooltipSize.x > Screen.width;
-            Debug.Log($"var {left} = {anchorCorners[3].x} + {tooltipSize.x} > {Screen.width};");
-            var above = anchorCorners[0].y - tooltipSize.y < 0;
-            Debug.Log($"var {above} = {anchorCorners[0].y} - {tooltipSize.y} < 0");
+            var left = mPos.x + tooltipSize.x > Screen.width;
+            Debug.Log($"var {left} = {mPos.x} + {tooltipSize.x} > {Screen.width};");
+            var above = mPos.y - tooltipSize.y < 0;
+            Debug.Log($"var {above} = {mPos.y} - {tooltipSize.y} < 0");
 
             GetComponent<RectTransform>().pivot = GetPivots(above, left);
-            transform.position = anchorCorners[GetCornerIndex(above, left)];
-            
-            transform.GetChild(0).gameObject.SetActive(true);
+            transform.position = mPos;
         }
+        
 
         // private void PositionTooltip(RectTransform anchorRect = null)
         // {
@@ -91,15 +72,6 @@ namespace SDVA.Utils.UI
 
         //     transform.position = anchorCorners[slotCorner] - corners[tooltipCorner] + transform.position;
         // }
-
-        private int GetCornerIndex(bool above, bool left)
-        {
-            Debug.Log($"Above: {above}, left: {left}");
-            if (!above && left) { return 0; }       // Bottom Left
-            else if (above && left) { return 1; }   // Top Left
-            else if (above && !left) { return 2; }  // Top Right
-            else { return 3; }                      // Bottom Right
-        }
 
         // pivots 0,1  1,1
         //        0,0  1,0

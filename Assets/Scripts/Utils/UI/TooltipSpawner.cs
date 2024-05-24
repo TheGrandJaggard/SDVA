@@ -56,7 +56,6 @@ namespace SDVA.Utils.UI
 
                 tooltip = tooltipObject.GetComponent<Tooltip>();
             }
-            tooltip.Anchor(GetComponent<RectTransform>());
             UpdateTooltip(tooltip);
         }
 
