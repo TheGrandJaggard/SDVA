@@ -1,4 +1,5 @@
 using System.Collections;
+using ModTool.Shared;
 using UnityEngine;
 
 namespace SDVA.Utils.UI
@@ -42,7 +43,7 @@ namespace SDVA.Utils.UI
         {
             yield return new WaitForEndOfFrame();
             // Required to ensure corners are updated by positioning elements.
-            // Canvas.ForceUpdateCanvases();
+            Canvas.ForceUpdateCanvases();
             Debug.Log("Starting to position");
 
             var corners = new Vector3[4];
@@ -50,7 +51,12 @@ namespace SDVA.Utils.UI
             var tooltipSize = new Vector2(Mathf.Abs(corners[1].x -corners[2].x), Mathf.Abs(corners[0].y -corners[1].y));
 
             var anchorCorners = new Vector3[4]; // 0:BL, 1: TL, 2:TR, 3:BR
-            if (anchorRect) { anchorRect.GetWorldCorners(anchorCorners); }
+            if (anchorRect == null)
+            {
+                var mPos = Input.mousePosition;
+                anchorCorners = new Vector3[] {mPos, mPos, mPos, mPos};
+            }
+            else { anchorRect.GetWorldCorners(anchorCorners); }
 
             var left = anchorCorners[3].x + tooltipSize.x > Screen.width;
             Debug.Log($"var {left} = {anchorCorners[3].x} + {tooltipSize.x} > {Screen.width};");
