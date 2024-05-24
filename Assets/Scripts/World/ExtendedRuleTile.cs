@@ -16,15 +16,15 @@ public class ExtendedRuleTile : RuleTile
         switch (neighbor)
         {
             case TilingRule.Neighbor.This:
-                {
-                    return other is ExtendedRuleTile
-                        && acceptedSiblingGroups.Contains((other as ExtendedRuleTile).sibingGroup);
-                }
+            {
+                return other is ExtendedRuleTile
+                    && acceptedSiblingGroups.Contains((other as ExtendedRuleTile).sibingGroup);
+            }
             case TilingRule.Neighbor.NotThis:
-                {
-                    return !(other is ExtendedRuleTile
-                        && acceptedSiblingGroups.Contains((other as ExtendedRuleTile).sibingGroup));
-                }
+            {
+                return !(other is ExtendedRuleTile
+                    && acceptedSiblingGroups.Contains((other as ExtendedRuleTile).sibingGroup));
+            }
         }
 
         return base.RuleMatch(neighbor, other);

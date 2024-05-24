@@ -14,15 +14,13 @@ namespace SDVA.Mines
         public void GenerateMines(int top, int bottom, int right, int left, MineController.OreSpawn[] oreSpawns, MineController.TileSpawn[] tileSpawns)
         {
             Dictionary<Vector3Int, TileBase> baseTiles = new();
-            Dictionary<Vector3Int, TileBase> oreTiles = RandomOrePatches(top, bottom, right, left, oreSpawns);//new();
+            Dictionary<Vector3Int, TileBase> oreTiles = RandomOrePatches(top, bottom, right, left, oreSpawns);
             mineController = GetComponent<MineController>();
             for (int i = bottom; i < top; i++)
             {
                 for (int j = left; j < right; j++)
                 {
                     baseTiles[new(i, j, 0)] = GetTile(tileSpawns, new(i, j));
-                    
-                    // oreTiles[new(i, j, 0)] = SpawnOre(oreSpawns, new(i, j));
                 }
             }
 
@@ -44,7 +42,6 @@ namespace SDVA.Mines
 
                 bool spawnOre = oreChance > randomNum; // this decides wether by chance we round up or down
                 
-                // Debug.Log("pos: " + pos + ", randomNum: " + randomNum + ", oreChance: " + oreChance + ", spawnOre: " + spawnOre + ", tile: " + oreSpawn.tile.name);
                 if (spawnOre) { return oreSpawn.mineTileSO.tile; }
             }
 
@@ -68,8 +65,6 @@ namespace SDVA.Mines
 
             TileBase tile = stages[tier].mineTileSO.tile;
 
-            // Debug.Log("randomNum: " + randomNum + ", sigSum: " + sigSum + ", tier: " + tier + ", tile: " + tile.name);
-
             return tile;
         }
 
@@ -79,7 +74,6 @@ namespace SDVA.Mines
             foreach (var oreSpawn in oreSpawns)
             {
                 int numPatches = UnityEngine.Random.Range(4, 6);
-                // Debug.Log("Generating " + numPatches + " patches of " + oreSpawn.tile.name);
                 
                 for (int patchNum = 0; patchNum < numPatches; patchNum++)
                 {
@@ -95,7 +89,6 @@ namespace SDVA.Mines
                         weightedPositions[oreChance * UnityEngine.Random.value] = pos;
                     }
                     Vector3Int startPosition = weightedPositions[weightedPositions.Keys.Max()];
-                    // Debug.Log("From weighted positions:  " + weightedPositions + " we chose " + startPosition);
                     oreTiles[startPosition] = oreSpawn.mineTileSO.tile;
 
                     int patchQuality = UnityEngine.Random.Range(1, 10);
@@ -107,29 +100,12 @@ namespace SDVA.Mines
                         {
                             position.x += Mathf.RoundToInt(UnityEngine.Random.onUnitSphere.x);
                             position.y += Mathf.RoundToInt(UnityEngine.Random.onUnitSphere.y);
-                            // Debug.Log("Generating " + oreSpawn.tile.name + " at " + position);
                         }
                         oreTiles[position] = oreSpawn.mineTileSO.tile;
                     }
                 }
             }
             return oreTiles;
-
-            // foreach (MineController.OreSpawn oreSpawn in oreSpawns)
-            // {
-            //     float randomNum = UnityEngine.Random.value;
-
-            //     float oreChance = oreSpawn.abundance
-            //         - oreSpawn.abundance / (1 + Mathf.Exp((oreSpawn.startY - pos.y) * oreSpawn.sharpness))
-            //         - oreSpawn.abundance / (1 + Mathf.Exp((oreSpawn.endY - pos.y) * -oreSpawn.sharpness));
-
-            //     bool spawnOre = oreChance > randomNum; // this decides wether by chance we round up or down
-                
-            //     // Debug.Log("pos: " + pos + ", randomNum: " + randomNum + ", oreChance: " + oreChance + ", spawnOre: " + spawnOre + ", tile: " + oreSpawn.tile.name);
-            //     if (spawnOre) { return oreSpawn.tile; }
-            // }
-            // 
-            // return null;
         }
     }
 }

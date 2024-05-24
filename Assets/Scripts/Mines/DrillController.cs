@@ -24,7 +24,6 @@ namespace SDVA.Mines
             Vector3Int tilePos = new(Mathf.RoundToInt(worldDrillTipPos.x - 0.5f), Mathf.RoundToInt(worldDrillTipPos.y - 0.5f), 0);
 
             other.GetComponentInParent<MineController>().MineTile(tilePos, toolType, toolLevel, mineSpeed * timingFactor);
-            // Debug.Log("Drilling");
         }
 
         private void Update() {

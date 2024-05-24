@@ -7,10 +7,8 @@ namespace SDVA.Utils
         // Update is called once per frame
         void FixedUpdate()
         {
-            // Vector3 cursorPos = Mouse.current.position.ReadValue();
-            // cursorPos.z = 10;
-            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 direction = new Vector2(cursorPosition.x - transform.position.x, cursorPosition.y - transform.position.y);
+            var cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var direction = new Vector2(cursorPosition.x - transform.position.x, cursorPosition.y - transform.position.y);
             transform.right = direction;
 
             if (direction.x <= 0)
