@@ -33,7 +33,7 @@ namespace SDVA.UI.InventorySystem
 
         public void AddItems(BaseItem item, int number)
         {
-            inventory.AddItemToSlot(index, item, number);
+            inventory.AddItemsToSlot(index, item, number);
         }
         
         public int GetNumber() => inventory.GetNumberInSlot(index);

@@ -22,10 +22,11 @@ namespace SDVA.InventorySystem
         [SerializeField][TextArea] string description;
         [Tooltip("The UI icon to represent this item in the inventory.")]
         [SerializeField] Sprite icon;
-        // [Tooltip("The prefab that should be spawned when this item is dropped.")]
-        // [SerializeField] Pickup pickup = null;
-        // [Tooltip("If true, multiple items of this type can be stacked in the same inventory slot.")]
-        [SerializeField] bool stackable = false;
+        [Tooltip("The maximum number of these items that can be held in one slot.")]
+        [SerializeField] int stackSize = 100;
+        
+        [Tooltip("The default price for this item.")]
+        [SerializeField] int sellPrice = 100;
 
         // STATE
         static Dictionary<string, BaseItem> itemLookupCache;
@@ -63,15 +64,17 @@ namespace SDVA.InventorySystem
             return itemLookupCache[itemID];
         }
 
-        public Sprite GetIcon() => icon;
-
         public string GetItemID() => itemID;
-
-        public bool IsStackable() => stackable;
 
         public string GetDisplayName() => displayName;
 
         public string GetDescription() => description;
+
+        public Sprite GetIcon() => icon;
+
+        public int GetMaxStackSize() => stackSize;
+
+        public int GetSellPrice() => sellPrice;
 
         public abstract string GetItemType();
 
@@ -95,6 +98,11 @@ namespace SDVA.InventorySystem
             if (string.IsNullOrWhiteSpace(itemID))
             {
                 itemID = System.Guid.NewGuid().ToString();
+            }
+
+            if (string.IsNullOrWhiteSpace(displayName))
+            {
+                displayName = name;
             }
         }
 

@@ -49,7 +49,7 @@ namespace SDVA.InventorySystem
 
         public void PickupItem()
         {
-            bool foundSlot = inventory.AddToFirstEmptySlot(item, number);
+            bool foundSlot = inventory.AddToAnySlot(item, number);
             if (foundSlot)
             {
                 Destroy(gameObject);
