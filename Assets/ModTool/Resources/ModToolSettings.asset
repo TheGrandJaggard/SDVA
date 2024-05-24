@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1009295391, guid: b981ac5fea65cbf46ab728daad9c9206, type: 3}
+  m_Name: ModToolSettings
+  m_EditorClassIdentifier: 
+  _productName: 2D SDVA Sandbox RPG
+  _unityVersion: 2022.3.10f1
+  _supportedPlatforms: 1
+  _supportedContent: 7
+  _logLevel: 4
+  _sharedAssets:
+  - Assets/Asset Packs/Anna's/Basic Items.png
+  - Assets/Asset Packs/Anna's/shadowman.png
+  - Assets/Asset Packs/Random/MyMines/Cracking.png
+  - Assets/Asset Packs/Random/MyMines/Mine-Backgrounds.png
+  - Assets/Asset Packs/Random/MyMines/Mine-BasicOres.png
+  - Assets/Asset Packs/Random/MyMines/Mine-Dirt.png
+  - Assets/Asset Packs/Random/MyMines/Mine-NormalStone.png
+  - Assets/Asset Packs/Random/MyMines/OrigionalForReference.png
+  - Assets/Asset Packs/Random/MyUI/SimplestUIPannelEver.png
+  - Assets/Asset Packs/Random/Tophat.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Characters/Basic Charakter
+    Actions.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Characters/Basic Charakter
+    Spritesheet.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Characters/Egg_And_Nest.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Characters/Free Chicken
+    Sprites.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Characters/Free Cow Sprites.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Characters/Tools.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Basic_Furniture.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Basic_Grass_Biom_things.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Basic_Plants.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Basic_tools_and_meterials.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Chest.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Egg_item.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Free_Chicken_House.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Materials/Free_Chicken_House.mat
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Materials/Mine
+    Entrance.mat
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Mine Entrance.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Paths.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Simple_Milk_and_grass_item.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Objects/Wood_Bridge.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/read_me.txt
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Sprout Lands color pallet/Sprout
+    Lands defautlt palette snip.PNG
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Sprout Lands color pallet/Sprout
+    Lands defautlt palette.aseprite
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Sprout Lands color pallet/Sprout
+    Lands defautlt palette.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Bitmask references
+    1.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Bitmask references
+    2.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Bitmask references
+    gif.gif
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Fences.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Grass.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Hills.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Path.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Tilled_Dirt.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Water.png
+  - Assets/Asset Packs/Sprout Lands - Sprites - Basic pack/Tilesets/Wooden House.png
+  - Assets/Game/Characters/Player.prefab
+  - Assets/Game/Lighting/2D URP Asset.asset
+  - Assets/Game/Lighting/2D URP Asset_Renderer.asset
+  - Assets/Game/Lighting/UniversalRenderPipelineGlobalSettings.asset
+  - Assets/Game/Mines/BlankMineTileSO.asset
+  - Assets/Game/Mines/CopperTileSO.asset
+  - Assets/Game/Mines/DirtTileSO.asset
+  - Assets/Game/Mines/GoldTileSO.asset
+  - Assets/Game/Mines/NormalStoneTileSO.asset
+  - Assets/Game/TileSheets/Mines/MineCopperOre 1.asset
+  - Assets/Game/TileSheets/Mines/MineDirt.asset
+  - Assets/Game/TileSheets/Mines/MineGoldOre.asset
+  - Assets/Game/TileSheets/Mines/MineNormalStone.asset
+  - Assets/Game/TileSheets/Mines/MinePallete.prefab
+  - Assets/Game/TileSheets/Mines/MineSpriteAtlas.spriteatlasv2
+  - Assets/Game/TileSheets/World/MyRuleGrass.asset
+  - Assets/Game/TileSheets/World/MyRulePath.asset
+  - Assets/Game/TileSheets/World/TilemapSpriteAtlas.spriteatlasv2
+  - Assets/Game/TileSheets/World/WorldCliff.asset
+  - Assets/Game/TileSheets/World/WorldTiles.prefab
+  - Assets/Scenes/TestMine.unity
+  - Assets/Scenes/TestWorld.unity
+  - Assets/Scripts/MyScriptsAssembly.asmdef
+  _sharedPackages:
+  - com.unity.cinemachine
+  - com.unity.nuget.newtonsoft-json
+  - com.unity.textmeshpro
