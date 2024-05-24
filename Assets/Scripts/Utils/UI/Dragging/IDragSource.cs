@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace SDVA.Utils.UI.Dragging
+﻿namespace SDVA.Utils.UI.Dragging
 {
     /// <summary>
     /// Components that implement this interfaces can act as the source for
