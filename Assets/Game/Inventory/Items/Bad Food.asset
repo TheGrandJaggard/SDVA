@@ -16,5 +16,6 @@ MonoBehaviour:
   displayName: Bad Food
   description: So bad it's purple
   icon: {fileID: 738050337, guid: 1c7c0fa34de434944a7de842082504aa, type: 3}
-  stackable: 0
+  stackSize: 4
+  sellPrice: 100
   consumeVerb: scarf down

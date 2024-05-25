@@ -10,7 +10,7 @@ namespace SDVA.Utils.UI
     /// </summary>
     public abstract class Tooltip : MonoBehaviour
     {
-        // LIFECYCLE
+        // LIFECYCLE METHODS
 
         private void Awake()
         {

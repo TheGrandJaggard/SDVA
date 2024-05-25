@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fcce61ba4ab87340a6b0f50179f1c7a, type: 3}
+  m_Name: Copper Ore
+  m_EditorClassIdentifier: 
+  itemID: 10078396-87ce-4aa7-8c41-d9c488db2d21
+  displayName: Copper Ore
+  description: Raw copper
+  icon: {fileID: 932445665, guid: 4663ca7a7750d9b4680690c60fff64c5, type: 3}
+  stackSize: 100
+  sellPrice: 100

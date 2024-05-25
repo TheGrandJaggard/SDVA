@@ -99,11 +99,6 @@ namespace SDVA.InventorySystem
             {
                 itemID = System.Guid.NewGuid().ToString();
             }
-
-            if (string.IsNullOrWhiteSpace(displayName))
-            {
-                displayName = name;
-            }
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
