@@ -45,4 +45,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickupPrefab: {fileID: 4059084997256380273, guid: 4e04974ddb1d9304eaac43c6d11b3d43, type: 3}
-  items: []
+  items:
+  - {fileID: 11400000, guid: d75621a2593f2914299f9a98bfdd96f0, type: 2}
+  - {fileID: 11400000, guid: d75621a2593f2914299f9a98bfdd96f0, type: 2}
+  - {fileID: 11400000, guid: d75621a2593f2914299f9a98bfdd96f0, type: 2}
+  - {fileID: 11400000, guid: d75621a2593f2914299f9a98bfdd96f0, type: 2}
+  - {fileID: 11400000, guid: d75621a2593f2914299f9a98bfdd96f0, type: 2}
+  - {fileID: 11400000, guid: 00f4a85300be64c4a909ff0b219c304f, type: 2}
+  - {fileID: 11400000, guid: 00f4a85300be64c4a909ff0b219c304f, type: 2}
+  - {fileID: 11400000, guid: 00f4a85300be64c4a909ff0b219c304f, type: 2}
+  - {fileID: 11400000, guid: e2351315b8d3229459a5b8426d627890, type: 2}
+  - {fileID: 11400000, guid: e2351315b8d3229459a5b8426d627890, type: 2}
+  - {fileID: 11400000, guid: e2351315b8d3229459a5b8426d627890, type: 2}
+  - {fileID: 11400000, guid: f40d105cf45ef03428fa0e16498592f2, type: 2}
+  - {fileID: 11400000, guid: f40d105cf45ef03428fa0e16498592f2, type: 2}
+  - {fileID: 11400000, guid: f40d105cf45ef03428fa0e16498592f2, type: 2}
+  - {fileID: 11400000, guid: f40d105cf45ef03428fa0e16498592f2, type: 2}
+  - {fileID: 11400000, guid: f40d105cf45ef03428fa0e16498592f2, type: 2}
+  - {fileID: 11400000, guid: f40d105cf45ef03428fa0e16498592f2, type: 2}
+  - {fileID: 11400000, guid: f40d105cf45ef03428fa0e16498592f2, type: 2}
+  - {fileID: 11400000, guid: f40d105cf45ef03428fa0e16498592f2, type: 2}

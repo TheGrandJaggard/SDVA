@@ -178,9 +178,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebbbfd6e6db6fc7469e5aa1a521e8cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mineSpeed: 1
+  mineSpeed: 3
   toolType: Drill
-  toolLevel: 2
+  toolLevel: 3
   mineDelay: 0
 --- !u!1 &3319887784825103742
 GameObject:
@@ -296,7 +296,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3319887784825103742}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -419,7 +419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19fc28a888c18ce4a82d521912c49df1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventorySize: 32
+  inventorySize: 19
 --- !u!114 &1221324548547534270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -433,6 +433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickupPrefab: {fileID: 4059084997256380273, guid: 4e04974ddb1d9304eaac43c6d11b3d43, type: 3}
+  items: []
 --- !u!1 &3437616973426533008
 GameObject:
   m_ObjectHideFlags: 0
