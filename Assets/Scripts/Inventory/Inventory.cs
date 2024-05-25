@@ -60,10 +60,10 @@ namespace SDVA.InventorySystem
         /// <returns>Number of items added to slot.</returns>
         public int AddToAnySlot(BaseItem item, int number)
         {
-            int slotNum = FindSlot(item);
-            if (slotNum < 0) { return 0; }
+            int slot = FindSlot(item);
+            if (slot < 0) { return 0; }
 
-            return AddItemsToSlot(slotNum, item, number);
+            return AddItemsToSlot(slot, item, number);
         }
 
         /// <summary>
@@ -85,28 +85,28 @@ namespace SDVA.InventorySystem
         }
 
         /// <returns>The item type in the given slot.</returns>
-        public BaseItem GetItemInSlot(int slotNum)
+        public BaseItem GetItemInSlot(int slot)
         {
-            return slots[slotNum].item;
+            return slots[slot].item;
         }
 
         /// <returns>The number of items in the given slot.</returns>
-        public int GetNumberInSlot(int slotNum)
+        public int GetNumberInSlot(int slot)
         {
-            return slots[slotNum].number;
+            return slots[slot].number;
         }
 
         /// <summary>
         /// Remove a number of items from the given slot. Will never remove more
         /// that there are.
         /// </summary>
-        public void RemoveFromSlot(int slotNum, int number)
+        public void RemoveFromSlot(int slot, int number)
         {
-            slots[slotNum].number -= number;
-            if (slots[slotNum].number <= 0)
+            slots[slot].number -= number;
+            if (slots[slot].number <= 0)
             {
-                slots[slotNum].number = 0;
-                slots[slotNum].item = null;
+                slots[slot].number = 0;
+                slots[slot].item = null;
             }
             InventoryUpdated?.Invoke();
         }
@@ -116,21 +116,20 @@ namespace SDVA.InventorySystem
         /// a stack of this type, it will add to the existing stack. Otherwise,
         /// it will be added to the first empty slot.
         /// </summary>
-        /// <param name="slotNum">The slot to attempt to add to.</param>
+        /// <param name="slot">The slot to attempt to add to.</param>
         /// <param name="item">The item type to add.</param>
         /// <param name="number">The number of items to add.</param>
         /// <returns>Number of items added to slot.</returns>
-        public int AddItemsToSlot(int slotNum, BaseItem item, int number)
+        public int AddItemsToSlot(int slot, BaseItem item, int number)
         {
-            var slot = slots[slotNum];
-            if (slot.item != null)
+            if (slots[slot].item != null)
             {
-                if (ReferenceEquals(slot.item, item))
+                if (ReferenceEquals(slots[slot].item, item))
                 {
-                    var stackSpaceRemaining = slot.item.GetMaxStackSize() - slot.number;
+                    var stackSpaceRemaining = slots[slot].item.GetMaxStackSize() - slots[slot].number;
                     var itemsAdded = Mathf.Clamp(number, 0, stackSpaceRemaining);
                     
-                    slot.number += itemsAdded;
+                    slots[slot].number += itemsAdded;
                     InventoryUpdated?.Invoke();
                     return itemsAdded;
                 }
@@ -141,11 +140,10 @@ namespace SDVA.InventorySystem
             }
             else
             {
-                var stackSpaceRemaining = slot.item.GetMaxStackSize();
-                var itemsAdded = Mathf.Clamp(number, 0, stackSpaceRemaining);
+                var itemsAdded = Mathf.Clamp(number, 0, item.GetMaxStackSize());
                 
-                slot.item = item;
-                slot.number = itemsAdded;
+                slots[slot].item = item;
+                slots[slot].number = itemsAdded;
                 InventoryUpdated?.Invoke();
                 return itemsAdded;
             }

@@ -10,7 +10,7 @@ namespace SDVA.InventorySystem
     {
         // STATE
         BaseItem item;
-        int number = 1;
+        int numItemsContained;
 
         // PUBLIC
 
@@ -22,7 +22,7 @@ namespace SDVA.InventorySystem
         public void Setup(BaseItem item, int number = 1)
         {
             this.item = item;
-            this.number = number;
+            numItemsContained = number;
 
             if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
             {
@@ -32,7 +32,7 @@ namespace SDVA.InventorySystem
 
         public BaseItem GetItem() => item;
 
-        public int GetNumber() => number;
+        public int GetNumber() => numItemsContained;
         
         // CACHED REFERENCE
         Inventory inventory;
@@ -45,12 +45,15 @@ namespace SDVA.InventorySystem
             inventory = player.GetComponent<Inventory>();
         }
 
+        // PUBLIC
+
         public bool CanBePickedUp() => inventory.HasSpaceFor(item);
 
         public void PickupItem()
         {
-            bool foundSlot = inventory.AddToAnySlot(item, number);
-            if (foundSlot)
+            var numItemsAdded = inventory.AddToAnySlot(item, numItemsContained);
+            numItemsContained -= numItemsAdded;
+            if (numItemsContained <= 0)
             {
                 Destroy(gameObject);
             }
