@@ -1,5 +1,6 @@
 using UnityEngine;
 using SDVA.Saving;
+using UnityEngine.InputSystem;
 using Newtonsoft.Json.Linq;
 
 namespace SDVA.Control
@@ -7,19 +8,29 @@ namespace SDVA.Control
     public class BasicMovement : MonoBehaviour, IJsonSaveable
     {
         // Exposed fields for setting parameters in Unity Inspector
-        [SerializeField] private float speed = 1f;
+        [SerializeField] float speed = 1f;
+        private PlayerWorldInputActions playerControls;
+        private InputAction move;
+
+        private void OnEnable()
+        {
+            playerControls = new PlayerWorldInputActions();
+            move = playerControls.Player.Move;
+            move.Enable();
+            // fire.performed += function;
+        }
+
+        private void OnDisable()
+        {
+            move.Disable();
+        }
 
         void FixedUpdate()
         {
-            float userInputV = Input.GetAxis("Vertical");
-            float userInputH = Input.GetAxis("Horizontal");
-
-            transform.position = new Vector3(
-                transform.position.x + userInputH * speed * Time.deltaTime,
-                transform.position.y + userInputV * speed * Time.deltaTime,
-                transform.position.z);
+            transform.position += (Vector3)(speed * Time.deltaTime * move.ReadValue<Vector2>());
         }
 
+        #region Saving
         JToken IJsonSaveable.CaptureAsJToken()
         {
             return transform.position.ToToken();
@@ -29,5 +40,6 @@ namespace SDVA.Control
         {
             transform.position = state.ToVector3();
         }
+        #endregion
     }
 }
