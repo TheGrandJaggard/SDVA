@@ -22,19 +22,21 @@ namespace SDVA.InventorySystem
                 transform.position.y + Random.onUnitSphere.y * 3f,
                 transform.position.z);
 
-            // This tween should move the pickup to the end position, updating movementUpdates.
+            // This tween moves the pickup to the end position, updating movementUpdates.
             DOTween.To(() => startPos, (Vector3 newVector) => movementUpdates = newVector, endPos, movementTime).SetEase(Ease.OutElastic);
             
-            // This sequence should bounce the pickup, updating bouncePos. It contains one tween for up, and another for down
+            // This sequence should bounce the pickup, updating bouncePos. It contains one tween for up, and another for down.
             Sequence bounceSeq = DOTween.Sequence().SetLoops(bounceNum, LoopType.Restart);
             bounceSeq.Append(DOTween.To(() => bouncePos, (float newFloat) => bouncePos = newFloat, bounceHeight, movementTime / (bounceNum * 2))
                 .SetEase(Ease.OutCubic));
             bounceSeq.Append(DOTween.To(() => bouncePos, (float newFloat) => bouncePos = newFloat, 0, movementTime / (bounceNum * 2))
                 .SetEase(Ease.InCubic));
             
-            // This tween should reduce bounce height
+            // This tween reduces bounce height
             DOTween.To(() => bounceHeight, (float newFloat) => bounceHeight = newFloat, 0f, movementTime);
         }
+
+        // TODO: add magnetism
 
         private void Update()
         {
