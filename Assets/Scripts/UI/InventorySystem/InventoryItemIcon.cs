@@ -13,7 +13,8 @@ namespace SDVA.UI.InventorySystem
     public class InventoryItemIcon : MonoBehaviour
     {
         // CONFIG DATA
-        [SerializeField] GameObject textContainer = null;
+        [Tooltip("Optional.")]
+        [SerializeField] GameObject itemNumberTextContainer = null;
         [SerializeField] TextMeshProUGUI itemNumber = null;
 
         // PUBLIC
@@ -33,7 +34,7 @@ namespace SDVA.UI.InventorySystem
 
             if (itemNumber != null)
             {
-                textContainer?.SetActive(number > 0);
+                itemNumberTextContainer?.SetActive(number > 0);
                 itemNumber.text = number.ToString();
             }
         }
