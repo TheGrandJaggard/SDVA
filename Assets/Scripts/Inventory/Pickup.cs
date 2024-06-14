@@ -9,8 +9,8 @@ namespace SDVA.InventorySystem
     public class Pickup : MonoBehaviour
     {
         // STATE
-        BaseItem item;
-        int numItemsContained;
+        private BaseItem item;
+        private int numItemsContained;
 
         // PUBLIC
 

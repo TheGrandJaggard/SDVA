@@ -24,7 +24,6 @@ namespace SDVA.Utils.UI
         /// </summary>
         [SerializeField] bool showingUI = false;
 
-        // Start is called before the first frame update
         void Start()
         {
             Toggled ??= new UnityEvent<bool>();
@@ -35,7 +34,6 @@ namespace SDVA.Utils.UI
             Inverse.Invoke(!showingUI);
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (Input.GetKeyDown(toggleKey))

@@ -1,6 +1,7 @@
 using UnityEngine;
 using SDVA.Utils.UI.Dragging;
 using SDVA.InventorySystem;
+
 namespace SDVA.UI.InventorySystem
 {
     /// <summary>
@@ -13,7 +14,7 @@ namespace SDVA.UI.InventorySystem
     {
         public void AddItems(BaseItem item, int number)
         {
-            var player = GameObject.FindGameObjectWithTag("Player"); // Multiplayer Problem
+            var player = GameObject.FindGameObjectWithTag("Player"); // TODO Multiplayer Problem
             player.GetComponent<ItemDropper>().DropItem(item, number);
         }
 

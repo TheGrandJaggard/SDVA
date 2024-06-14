@@ -21,7 +21,6 @@ namespace SDVA.UI.InventorySystem
             if (tooltip.GetType() != typeof(ItemTooltip)) { return; }
 
             var itemTooltip = tooltip.GetComponent<ItemTooltip>();
-
             var item = GetComponent<IItemHolder>().GetItem();
 
             itemTooltip.SetupContent(item);

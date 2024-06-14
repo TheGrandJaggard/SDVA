@@ -21,12 +21,12 @@ namespace SDVA.Utils.UI.Dragging
         where T : class
     {
         // PRIVATE STATE
-        Vector3 startPosition;
-        Transform originalParent;
-        IDragSource<T> source;
+        private Vector3 startPosition;
+        private Transform originalParent;
+        private IDragSource<T> source;
 
         // CACHED REFERENCES
-        Canvas parentCanvas;
+        private Canvas parentCanvas;
 
         // LIFECYCLE METHODS
         private void Awake()
@@ -57,21 +57,19 @@ namespace SDVA.Utils.UI.Dragging
             transform.SetParent(originalParent, true);
 
             IDragDestination<T> container;
-            if (!EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current.IsPointerOverGameObject())
             {
-                container = parentCanvas.GetComponent<IDragDestination<T>>();
+                container = GetContainer(eventData);
             }
             else
             {
-                container = GetContainer(eventData);
+                container = parentCanvas.GetComponent<IDragDestination<T>>();
             }
 
             if (container != null)
             {
                 DropItemIntoContainer(container);
             }
-
-
         }
 
         private IDragDestination<T> GetContainer(PointerEventData eventData)
@@ -79,7 +77,6 @@ namespace SDVA.Utils.UI.Dragging
             if (eventData.pointerEnter)
             {
                 var container = eventData.pointerEnter.GetComponentInParent<IDragDestination<T>>();
-
                 return container;
             }
             return null;
@@ -87,15 +84,13 @@ namespace SDVA.Utils.UI.Dragging
 
         private void DropItemIntoContainer(IDragDestination<T> destination)
         {
-            if (object.ReferenceEquals(destination, source)) return;
-
-            var destinationContainer = destination as IDragContainer<T>;
-            var sourceContainer = source as IDragContainer<T>;
+            if (ReferenceEquals(destination, source)) { return; }
 
             // Swap won't be possible
-            if (destinationContainer == null || sourceContainer == null ||
+            if (destination is not IDragContainer<T> destinationContainer ||
+                source is not IDragContainer<T> sourceContainer ||
                 destinationContainer.GetItem() == null ||
-                object.ReferenceEquals(destinationContainer.GetItem(), sourceContainer.GetItem()))
+                ReferenceEquals(destinationContainer.GetItem(), sourceContainer.GetItem()))
             {
                 AttemptSimpleTransfer(destination);
                 return;
