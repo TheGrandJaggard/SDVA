@@ -20,9 +20,7 @@
         /// <summary>
         /// Remove a given number of items from the source.
         /// </summary>
-        /// <param name="number">
-        /// This should never exceed the number returned by `GetNumber`.
-        /// </param>
+        /// <param name="number">This should never exceed the number returned by `GetNumber`.</param>
         void RemoveItems(int number);
     }
 }

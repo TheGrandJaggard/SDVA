@@ -198,6 +198,7 @@ GameObject:
   - component: {fileID: 4605382225370059958}
   - component: {fileID: 7533593718207332438}
   - component: {fileID: 4775049215868053532}
+  - component: {fileID: 3875876033499493829}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -418,7 +419,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19fc28a888c18ce4a82d521912c49df1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventorySize: 19
+  inventorySize: 25
+--- !u!114 &3875876033499493829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3319887784825103742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8c756a4f32f0d945bb0d60bb0f29ef8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupPrefab: {fileID: 4059084997256380273, guid: 4e04974ddb1d9304eaac43c6d11b3d43, type: 3}
 --- !u!1 &3437616973426533008
 GameObject:
   m_ObjectHideFlags: 0

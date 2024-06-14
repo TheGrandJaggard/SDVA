@@ -9,5 +9,6 @@ namespace SDVA.UI.InventorySystem
     /// </summary>
     public class InventoryDragItem : DragItem<BaseItem>
     {
+        
     }
 }

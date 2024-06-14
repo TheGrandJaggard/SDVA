@@ -18,12 +18,7 @@ namespace SDVA.UI.InventorySystem
 
         // PUBLIC
 
-        public void SetItem(BaseItem item)
-        {
-            SetItem(item, 0);
-        }
-
-        public void SetItem(BaseItem item, int number)
+        public void SetItem(BaseItem item, int number = 1)
         {
             var iconImage = GetComponent<Image>();
             if (item == null)
@@ -36,17 +31,10 @@ namespace SDVA.UI.InventorySystem
                 iconImage.sprite = item.GetIcon();
             }
 
-            if (itemNumber)
+            if (itemNumber != null)
             {
-                if (number <= 1)
-                {
-                    textContainer.SetActive(false);
-                }
-                else
-                {
-                    textContainer.SetActive(true);
-                    itemNumber.text = number.ToString();
-                }
+                textContainer?.SetActive(number > 0);
+                itemNumber.text = number.ToString();
             }
         }
     }

@@ -12,8 +12,8 @@ namespace SDVA.Utils.UI.Dragging
     /// During dragging, the item is reparented to the parent canvas.
     /// 
     /// After the item is dropped it will be automatically return to the
-    /// original UI parent. It is the job of components implementing `IDragContainer`,
-    /// `IDragDestination and `IDragSource` to update the interface after a drag
+    /// original UI parent. It is the job of components implementing `IDragContainer`
+    /// or `IDragSource` and `IDragDestination` to update the interface after a drag
     /// has occurred.
     /// </summary>
     /// <typeparam name="T">The type that represents the item being dragged.</typeparam>
@@ -36,6 +36,7 @@ namespace SDVA.Utils.UI.Dragging
         }
 
         // PRIVATE
+        #region Interface Triggers
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
             startPosition = transform.position;
@@ -68,7 +69,7 @@ namespace SDVA.Utils.UI.Dragging
 
             if (container != null)
             {
-                DropItemIntoContainer(container);
+                DropItemIntoDestination(container);
             }
         }
 
@@ -81,113 +82,69 @@ namespace SDVA.Utils.UI.Dragging
             }
             return null;
         }
+        #endregion
 
-        private void DropItemIntoContainer(IDragDestination<T> destination)
+        /// <summary>
+        /// Attempt to drop items from source into destination.
+        /// </summary>
+        /// <param name="destination">The destination for items.</param>
+        private void DropItemIntoDestination(IDragDestination<T> destination)
         {
             if (ReferenceEquals(destination, source)) { return; }
 
-            // Swap won't be possible
-            if (destination is not IDragContainer<T> destinationContainer ||
-                source is not IDragContainer<T> sourceContainer ||
-                destinationContainer.GetItem() == null ||
-                ReferenceEquals(destinationContainer.GetItem(), sourceContainer.GetItem()))
+            // Check for swappability
+            if (destination is IDragContainer<T> destinationContainer &&
+                source is IDragContainer<T> sourceContainer &&
+                destinationContainer.GetItem() != null)
             {
-                AttemptSimpleTransfer(destination);
-                return;
+                var successful = AttemptSwap(sourceContainer, destinationContainer);
+                if (successful) { return; }
             }
 
-            AttemptSwap(destinationContainer, sourceContainer);
+            AttemptSimpleTransfer(destination);
+            return;
         }
 
-        private void AttemptSwap(IDragContainer<T> destination, IDragContainer<T> source)
+        /// <summary>
+        /// Attempt to swap items between source and destination.
+        /// </summary>
+        /// <param name="source">First container.</param>
+        /// <param name="destination">Second container.</param>
+        /// <returns>Whether the attempt was successful.</returns>
+        private bool AttemptSwap(IDragContainer<T> source, IDragContainer<T> destination)
         {
             // Provisionally remove item from both sides. 
-            var removedSourceNumber = source.GetNumber();
-            var removedSourceItem = source.GetItem();
-            var removedDestinationNumber = destination.GetNumber();
-            var removedDestinationItem = destination.GetItem();
-
-            source.RemoveItems(removedSourceNumber);
-            destination.RemoveItems(removedDestinationNumber);
-
-            var sourceTakeBackNumber = CalculateTakeBack(removedSourceItem, removedSourceNumber, source, destination);
-            var destinationTakeBackNumber = CalculateTakeBack(removedDestinationItem, removedDestinationNumber, destination, source);
-
-            // Do take backs (if needed)
-            if (sourceTakeBackNumber > 0)
+            var sourceNumber = source.GetNumber();
+            var sourceItem = source.GetItem();
+            var destinationNumber = destination.GetNumber();
+            var destinationItem = destination.GetItem();
+            
+            // if both the source and destination can recive each other's items
+            if (sourceNumber <= destination.MaxAcceptable(sourceItem)
+                && destinationNumber <= source.MaxAcceptable(destinationItem))
             {
-                source.AddItems(removedSourceItem, sourceTakeBackNumber);
-                removedSourceNumber -= sourceTakeBackNumber;
-            }
-            if (destinationTakeBackNumber > 0)
-            {
-                destination.AddItems(removedDestinationItem, destinationTakeBackNumber);
-                removedDestinationNumber -= destinationTakeBackNumber;
-            }
+                source.RemoveItems(sourceNumber);
+                destination.RemoveItems(destinationNumber);
+                
+                source.AddItems(destinationItem, destinationNumber);
+                destination.AddItems(sourceItem, sourceNumber);
 
-            // Abort if we can't do a successful swap
-            if (source.MaxAcceptable(removedDestinationItem) < removedDestinationNumber ||
-                destination.MaxAcceptable(removedSourceItem) < removedSourceNumber ||
-                removedSourceNumber == 0)
-            {
-                if (removedDestinationNumber > 0)
-                {
-                    destination.AddItems(removedDestinationItem, removedDestinationNumber);
-                }
-                if (removedSourceNumber > 0)
-                {
-                    source.AddItems(removedSourceItem, removedSourceNumber);
-                }
-                return;
+                return true;
             }
-
-            // Do swaps
-            if (removedDestinationNumber > 0)
-            {
-                source.AddItems(removedDestinationItem, removedDestinationNumber);
-            }
-            if (removedSourceNumber > 0)
-            {
-                destination.AddItems(removedSourceItem, removedSourceNumber);
-            }
+            return false;
         }
 
-        private bool AttemptSimpleTransfer(IDragDestination<T> destination)
+        /// <summary>
+        /// Attempt to move items from source to destination.
+        /// </summary>
+        /// <param name="destination">The destination for items.</param>
+        /// <returns>The number of items added to destination.</returns>
+        private int AttemptSimpleTransfer(IDragDestination<T> destination)
         {
-            var draggingItem = source.GetItem();
-            var draggingNumber = source.GetNumber();
+            var transferred = destination.AddItems(source.GetItem(), source.GetNumber());
+            source.RemoveItems(transferred);
 
-            var acceptable = destination.MaxAcceptable(draggingItem);
-            var toTransfer = Mathf.Min(acceptable, draggingNumber);
-
-            if (toTransfer > 0)
-            {
-                source.RemoveItems(toTransfer);
-                destination.AddItems(draggingItem, toTransfer);
-                return false;
-            }
-
-            return true;
-        }
-
-        private int CalculateTakeBack(T removedItem, int removedNumber, IDragContainer<T> removeSource, IDragContainer<T> destination)
-        {
-            var takeBackNumber = 0;
-            var destinationMaxAcceptable = destination.MaxAcceptable(removedItem);
-
-            if (destinationMaxAcceptable < removedNumber)
-            {
-                takeBackNumber = removedNumber - destinationMaxAcceptable;
-
-                var sourceTakeBackAcceptable = removeSource.MaxAcceptable(removedItem);
-
-                // Abort and reset
-                if (sourceTakeBackAcceptable < takeBackNumber)
-                {
-                    return 0;
-                }
-            }
-            return takeBackNumber;
+            return transferred;
         }
     }
 }

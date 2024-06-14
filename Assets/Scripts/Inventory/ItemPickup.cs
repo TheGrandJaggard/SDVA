@@ -20,6 +20,8 @@ namespace SDVA.InventorySystem
             SetupTweens();
         }
 
+        // TODO: ignore player for a small amount of time
+
         private void SetupTweens()
         {
             bounceTime = movementTime / (bounceNum * 2);
