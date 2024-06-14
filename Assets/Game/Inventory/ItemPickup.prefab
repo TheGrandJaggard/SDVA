@@ -51,6 +51,7 @@ MonoBehaviour:
   movementDistance: 2
   bounceHeight: 0.5
   bounceNum: 4
+  magnetism: 0.001
 --- !u!212 &6472261530712329341
 SpriteRenderer:
   m_ObjectHideFlags: 0

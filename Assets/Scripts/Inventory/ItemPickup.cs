@@ -15,6 +15,8 @@ namespace SDVA.InventorySystem
         [SerializeField] int bounceNum;
         private float bounceTime;
 
+        [SerializeField] float magnetism;
+
         private void Start()
         {
             SetupTweens();
@@ -56,12 +58,33 @@ namespace SDVA.InventorySystem
             bounceSeq.onComplete += StartBounce;
         }
 
-        // TODO: add magnetism
-
         private void Update()
         {
-            if (movementUpdates == new Vector3()) { return; }
-            transform.position = new Vector3(movementUpdates.x, movementUpdates.y + bouncePos, movementUpdates.z);
+            transform.position = movementUpdates
+                               + Vector3.up * bouncePos
+                               + ItemMagnetism() * Time.deltaTime;
+            
+            // new Vector3(movementUpdates.x, movementUpdates.y + bouncePos, movementUpdates.z);
+        }
+
+        private Vector3 ItemMagnetism() // TODO this seems very non-performant
+        {
+            var magnetismDirection = new Vector3();
+            foreach (var other in Physics2D.OverlapCircleAll(transform.position, 0.3f))
+            {
+                Debug.Log("Hit " + other.name);
+                if (other.TryGetComponent<ItemPickup>(out var otherItem)
+                    && ReferenceEquals(GetItem(), otherItem.GetItem()))
+                {
+                    Debug.Log("magging " + other.name);
+                    magnetismDirection += (transform.position - other.transform.position) * magnetism;
+                    if ((transform.position - other.transform.position).sqrMagnitude < 0.01f)
+                    {
+                        Setup(GetItem(), GetNumber() + otherItem.GetNumber());
+                    }
+                }
+            }
+            return magnetismDirection;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
