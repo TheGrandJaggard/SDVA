@@ -10,40 +10,29 @@ namespace SDVA.UI.InventorySystem
         [SerializeField] InventoryItemIcon icon = null;
 
         // STATE
-        int index;
+        int slot;
         Inventory inventory;
 
         // PUBLIC
 
-        public void Setup(Inventory inventory, int index)
+        public void Setup(Inventory inventory, int slot)
         {
             this.inventory = inventory;
-            this.index = index;
-            icon.SetItem(inventory.GetItemInSlot(index), inventory.GetNumberInSlot(index));
+            this.slot = slot;
+            icon.SetItem(inventory.GetItemInSlot(slot), inventory.GetNumberInSlot(slot));
         }
 
-        public int MaxAcceptable(BaseItem item)
-        {
-            if (inventory.HasSpaceFor(item))
-            {
-                return int.MaxValue;
-            }
-            return 0;
-        }
+        public int MaxAcceptable(BaseItem item) => item.GetMaxStackSize();
 
-        public void AddItems(BaseItem item, int number)
-        {
-            inventory.AddItemsToSlot(index, item, number);
-        }
-        
-        public int GetNumber() => inventory.GetNumberInSlot(index);
+        public int AddItems(BaseItem item, int number) => inventory.AddToSlot(slot, item, number);
 
-        public BaseItem GetItem() => inventory.GetItemInSlot(index);
+        public int GetNumber() => inventory.GetNumberInSlot(slot);
+
+        public BaseItem GetItem() => inventory.GetItemInSlot(slot);
         
         public void RemoveItems(int number)
         {
-            inventory.RemoveFromSlot(index, number);
+            inventory.RemoveFromSlot(slot, number);
         }
-
     }
 }
