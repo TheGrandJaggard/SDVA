@@ -4,7 +4,8 @@ using UnityEngine;
 namespace SDVA.Utils.UI
 {
     /// <summary>
-    /// Abstract base class of tooltip.
+    /// Abstract base class of tooltip which handles spawning in the correct
+    /// position on the screen relative to the mouse cursor.
     /// 
     /// Override the abstract functions to create a tooltip for your own data.
     /// </summary>

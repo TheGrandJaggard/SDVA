@@ -7,5 +7,6 @@
     /// <typeparam name="T">The type that represents the item being dragged.</typeparam>
     public interface IDragContainer<T> : IDragDestination<T>, IDragSource<T> where T : class
     {
+        
     }
 }

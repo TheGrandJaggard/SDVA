@@ -4,8 +4,7 @@ using UnityEngine.EventSystems;
 namespace SDVA.Utils.UI
 {
     /// <summary>
-    /// Abstract base class that handles the spawning of a tooltip prefab at the
-    /// correct position on screen relative to a cursor.
+    /// Abstract base class that handles the spawning of a tooltip prefab.
     /// 
     /// Override the abstract functions to create a tooltip spawner for your own
     /// data.
@@ -71,32 +70,5 @@ namespace SDVA.Utils.UI
                 Destroy(tooltip.gameObject);
             }
         }
-
-        // private void PositionTooltip()
-        // {
-        //     // Required to ensure corners are updated by positioning elements.
-        //     Canvas.ForceUpdateCanvases();
-
-        //     var tooltipCorners = new Vector3[4];
-        //     tooltip.GetComponent<RectTransform>().GetWorldCorners(tooltipCorners);
-        //     var slotCorners = new Vector3[4];
-        //     GetComponent<RectTransform>().GetWorldCorners(slotCorners);
-
-        //     bool below = transform.position.y > Screen.height / 2;
-        //     bool right = transform.position.x < Screen.width / 2;
-
-        //     int slotCorner = GetCornerIndex(below, right);
-        //     int tooltipCorner = GetCornerIndex(!below, !right);
-
-        //     tooltip.transform.position = slotCorners[slotCorner] - tooltipCorners[tooltipCorner] + tooltip.transform.position;
-        // }
-
-        // private int GetCornerIndex(bool below, bool right)
-        // {
-        //     if (below && !right) return 0;
-        //     else if (!below && !right) return 1;
-        //     else if (!below && right) return 2;
-        //     else return 3;
-        // }
     }
 }

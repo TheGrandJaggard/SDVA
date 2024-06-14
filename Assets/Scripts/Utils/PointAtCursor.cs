@@ -4,7 +4,6 @@ namespace SDVA.Utils
 {
     public class PointAtCursor : MonoBehaviour
     {
-        // Update is called once per frame
         void FixedUpdate()
         {
             var cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
