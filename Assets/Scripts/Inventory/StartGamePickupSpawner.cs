@@ -19,7 +19,10 @@ namespace SDVA.InventorySystem
         {
             foreach (var item in items)
             {
-                DropItem(item);
+                var instance = DropItem(item);
+                #if UNITY_EDITOR
+                    instance.transform.parent = transform;
+                #endif
             }
         }
     }
