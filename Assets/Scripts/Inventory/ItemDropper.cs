@@ -9,6 +9,7 @@ namespace SDVA.InventorySystem
     {
         // CACHE MEMORY
         [SerializeField] GameObject pickupPrefab;
+
         // PUBLIC
 
         /// <summary>
@@ -18,10 +19,9 @@ namespace SDVA.InventorySystem
         /// <param name="number">Number of items contained in the pickup. Defaults to 1.</param>
         /// <param name="position">Where to spawn the pickup. Defaults to position of spawner.</param>
         /// <returns>Reference to the pickup object spawned.</returns>
-
         public Pickup DropItem(BaseItem item, int number = 1, Vector2? position = null)
         {
-            if (pickupPrefab.GetComponent<Pickup>() == null) { return null; }
+            if (pickupPrefab.GetComponent<Pickup>() == null) { Debug.Log("Invalid pickup prefab", this); return null; }
             var pickup = Instantiate(pickupPrefab).GetComponent<Pickup>();
 
             pickup.transform.position = position ?? GetDropLocation();
