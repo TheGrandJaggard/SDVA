@@ -1,14 +1,14 @@
-﻿namespace SDVA.Utils.UI.Dragging
+﻿namespace SDVA.Utils.UI.ItemMovement
 {
     /// <summary>
-    /// Components that implement this interfaces can act as the destination for
-    /// dragging a `DragItem`.
+    /// Components that implement this interface can act as the destination for
+    /// moving items by `DragItem` or `TODO put name here`.
     /// </summary>
     /// <typeparam name="T">Item type.</typeparam>
-    public interface IDragDestination<T> where T : class
+    public interface IItemDestination<T> where T : class
     {
         // Note: this does not depend on the current source item.
-        // Note: things that only accept one item will always return '1' etc
+        // Note: things that only accept one item will always return '1' etc.
         /// <summary>
         /// How many of the given item can be held by the destination.
         /// If there is no limit Int.MaxValue should be returned.

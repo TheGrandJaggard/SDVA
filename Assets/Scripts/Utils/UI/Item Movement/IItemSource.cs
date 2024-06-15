@@ -1,11 +1,11 @@
-﻿namespace SDVA.Utils.UI.Dragging
+﻿namespace SDVA.Utils.UI.ItemMovement
 {
     /// <summary>
     /// Components that implement this interfaces can act as the source for
-    /// dragging a `DragItem`.
+    /// moving items by `DragItem` or `TODO put name here`.
     /// </summary>
     /// <typeparam name="T">The type that represents the item being dragged.</typeparam>
-    public interface IDragSource<T> where T : class
+    public interface IItemSource<T> where T : class
     {
         /// <summary>
         /// What item type currently resides in this source?
