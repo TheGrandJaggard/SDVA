@@ -19,16 +19,16 @@ namespace SDVA.UI.InventorySystem
         {
             this.inventory = inventory;
             this.slot = slot;
-            icon.SetItem(inventory.GetItemInSlot(slot), inventory.GetNumberInSlot(slot));
+            icon.SetItem(inventory.GetSlotItem(slot), inventory.GetSlotNumber(slot));
         }
 
         public int MaxAcceptable(BaseItem item) => item.GetMaxStackSize();
 
         public int AddItems(BaseItem item, int number) => inventory.AddToSlot(slot, item, number);
 
-        public int GetNumber() => inventory.GetNumberInSlot(slot);
+        public int GetNumber() => inventory.GetSlotNumber(slot);
 
-        public BaseItem GetItem() => inventory.GetItemInSlot(slot);
+        public BaseItem GetItem() => inventory.GetSlotItem(slot);
         
         public void RemoveItems(int number)
         {

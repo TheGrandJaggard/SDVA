@@ -14,24 +14,24 @@ namespace SDVA.InventorySystem
 
         public override void PrimaryAction(Inventory caller)
         {
-            if (caller.gameObject.CompareTag("Player"))
-            {
-                Debug.Log("Swinging tool");
-                // TODO 
-                // var something caller.gameobject.GetComponent<Something>();
-                // something.Swing(this)
-            }
+            // if (caller.gameObject.CompareTag("Player"))
+            // {
+            //     Debug.Log("Swinging tool");
+            //     // TODO 
+            //     // var something caller.gameobject.GetComponent<Something>();
+            //     // something.Swing(this)
+            // }
         }
 
         public override void SecondaryAction(Inventory caller)
         {
-            if (caller.gameObject.CompareTag("Player"))
-            {
-                Debug.Log("Secondary Action on tool");
-                // TODO 
-                // var something caller.gameobject.GetComponent<Something>();
-                // something.Swing(this)
-            }
+            // if (caller.gameObject.CompareTag("Player"))
+            // {
+            //     Debug.Log("Secondary Action on tool");
+            //     // TODO 
+            //     // var something caller.gameobject.GetComponent<Something>();
+            //     // something.Swing(this)
+            // }
         }
     }
 }

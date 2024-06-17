@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using SDVA.Saving;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using System;
 
 namespace SDVA.InventorySystem
@@ -13,7 +10,7 @@ namespace SDVA.InventorySystem
     /// This component should be placed on the GameObject tagged "Player".
     /// This component should be generic enough to be placed on chests
     /// </summary>
-    public class Inventory : MonoBehaviour, IJsonSaveable
+    public class Inventory
     {
         // CONFIG DATA
         [Tooltip("Default size")]
@@ -28,6 +25,12 @@ namespace SDVA.InventorySystem
             public int number;
         }
 
+        // CONSTRUCTOR
+        public Inventory(int inventorySize)
+        {
+            slots = new InventorySlot[inventorySize];
+        }
+
         // STATIC METHODS
 
         /// <summary>
@@ -36,7 +39,7 @@ namespace SDVA.InventorySystem
         public static Inventory GetPlayerInventory()
         {
             var player = GameObject.FindWithTag("Player"); // TODO Multiplayer Problem
-            return player.GetComponent<Inventory>();
+            return player.GetComponent<InventoryComponent>().GetInventory();
         }
 
         // PUBLIC
@@ -62,9 +65,9 @@ namespace SDVA.InventorySystem
             var total = 0;
             for (int i = 0; i < slots.Length; i++)
             {
-                if (ReferenceEquals(GetItemInSlot(i), item))
+                if (ReferenceEquals(GetSlotItem(i), item))
                 {
-                    total += GetNumberInSlot(i);
+                    total += GetSlotNumber(i);
                 }
             }
             return total;
@@ -82,11 +85,11 @@ namespace SDVA.InventorySystem
             var maxAcceptable = 0;
             for (int i = 0; i < slots.Length; i++)
             {
-                if (ReferenceEquals(GetItemInSlot(i), item))
+                if (ReferenceEquals(GetSlotItem(i), item))
                 {
                     maxAcceptable += GetStackSpaceRemaining(i);
                 }
-                else if (GetItemInSlot(i) == null)
+                else if (GetSlotItem(i) == null)
                 {
                     maxAcceptable += item.GetMaxStackSize();
                 }
@@ -98,21 +101,9 @@ namespace SDVA.InventorySystem
         /// <returns>How many more items this slot can hold.</returns>
         public int GetStackSpaceRemaining(int slot)
         {
-            if (GetItemInSlot(slot) == null) { return 0; }
+            if (GetSlotItem(slot) == null) { return 0; }
 
-            return GetItemInSlot(slot).GetMaxStackSize() - GetNumberInSlot(slot);
-        }
-
-        /// <returns>The item type in the given slot.</returns>
-        public BaseItem GetItemInSlot(int slot)
-        {
-            return slots[slot].item;
-        }
-
-        /// <returns>The number of items in the given slot.</returns>
-        public int GetNumberInSlot(int slot)
-        {
-            return slots[slot].number;
+            return GetSlotItem(slot).GetMaxStackSize() - GetSlotNumber(slot);
         }
 
         /// <summary>
@@ -137,16 +128,20 @@ namespace SDVA.InventorySystem
 
         /// <summary>
         /// Attempt to add the items to the first available slot.
+        /// Will recursively add items to available slots 
         /// </summary>
         /// <param name="item">The item to add.</param>
         /// <param name="number">The number to add.</param>
         /// <returns>Number of items added to slot.</returns>
         public int AddToAnySlot(BaseItem item, int number)
         {
-            int slot = FindSlot(item);
-            if (slot < 0) { return 0; }
-
-            return AddToSlot(slot, item, number);
+            int totalAdded = 0;
+            while (HasSpaceFor(item) && totalAdded < number)
+            {
+                int slot = FindSlot(item);
+                totalAdded += AddToSlot(slot, item, number - totalAdded);
+            }
+            return totalAdded;
         }
 
         /// <summary>
@@ -159,14 +154,14 @@ namespace SDVA.InventorySystem
         /// <returns>Number of items added to slot.</returns>
         public int AddToSlot(int slot, BaseItem item, int number)
         {
-            if (GetItemInSlot(slot) != null)
+            if (GetSlotItem(slot) != null)
             {
-                if (ReferenceEquals(GetItemInSlot(slot), item))
+                if (ReferenceEquals(GetSlotItem(slot), item))
                 {
                     var itemsAdded = Mathf.Clamp(number, 0, GetStackSpaceRemaining(slot));
 
-                    slots[slot].number += itemsAdded;
-                    InventoryUpdated?.Invoke();
+                    SetSlotNumber(slot, GetSlotNumber(slot) + itemsAdded);
+                    InvokeInventoryUpdateEvent();
                     return itemsAdded;
                 }
                 else
@@ -178,37 +173,52 @@ namespace SDVA.InventorySystem
             {
                 var itemsAdded = Mathf.Clamp(number, 0, item.GetMaxStackSize());
                 
-                slots[slot].item = item;
-                slots[slot].number = itemsAdded;
-                InventoryUpdated?.Invoke();
+                SetSlotItem(slot, item);
+                SetSlotNumber(slot, itemsAdded);
+                InvokeInventoryUpdateEvent();
                 return itemsAdded;
             }
         }
 
         /// <summary>
         /// Remove a number of items from the given slot. Will never remove more
-        /// that there are.
+        /// than there are.
         /// </summary>
         public void RemoveFromSlot(int slot, int number)
         {
-            slots[slot].number -= number;
-            if (slots[slot].number <= 0)
+            SetSlotNumber(slot, GetSlotNumber(slot) - number);
+            if (GetSlotNumber(slot) <= 0)
             {
-                slots[slot].number = 0;
-                slots[slot].item = null;
+                SetSlotNumber(slot, 0);
+                SetSlotItem(slot, null);
             }
-            InventoryUpdated?.Invoke();
+            InvokeInventoryUpdateEvent();
         }
 
-        // LIFECYCLE METHODS
+        /// <returns>The item type in the given slot.</returns>
+        public BaseItem GetSlotItem(int slot) => slots[slot].item;
 
-        private void Awake()
-        {
-            slots = new InventorySlot[inventorySize];
-        }
+        /// <returns>The number of items in the given slot.</returns>
+        public int GetSlotNumber(int slot) => slots[slot].number;
 
-        // PRIVATE
+        #region Internal
+        /// <summary>
+        /// Set the item in slot 'slot' to 'item'.
+        /// </summary>
+        internal void SetSlotItem(int slot, BaseItem item) => slots[slot].item = item;
 
+        /// <summary>
+        /// Set the number of items in slot 'slot' to 'number'.
+        /// </summary>
+        internal void SetSlotNumber(int slot, int number) => slots[slot].number = number;
+
+        /// <summary>
+        /// Invokes the InventoryUpdated event.
+        /// </summary>
+        internal void InvokeInventoryUpdateEvent() => InventoryUpdated?.Invoke();
+        #endregion
+
+        #region Private
         /// <summary>
         /// Find a slot that can accomodate the given item.
         /// Will find a matching stack with space remaining or an empty slot.
@@ -232,7 +242,7 @@ namespace SDVA.InventorySystem
         {
             for (int i = 0; i < slots.Length; i++)
             {
-                if (slots[i].item == null)
+                if (GetSlotItem(i) == null)
                 {
                     return i;
                 }
@@ -248,58 +258,13 @@ namespace SDVA.InventorySystem
         {
             for (int i = 0; i < slots.Length; i++)
             {
-                if (ReferenceEquals(slots[i].item, item)
-                    && GetNumberInSlot(i) < item.GetMaxStackSize())
+                if (ReferenceEquals(GetSlotItem(i), item)
+                    && GetSlotNumber(i) < item.GetMaxStackSize())
                 {
                     return i;
                 }
             }
             return -1;
-        }
-    
-        #region Saving
-        [System.Serializable]
-        private struct InventorySlotRecord
-        {
-            public string itemID;
-            public int number;
-        }
-
-        public JToken CaptureAsJToken()
-        {
-            JObject state = new JObject();
-            IDictionary<string, JToken> stateDict = state;
-            for (int i = 0; i < inventorySize; i++)
-            {
-                if (slots[i].item != null)
-                {
-                    JObject itemState = new JObject();
-                    IDictionary<string, JToken> itemStateDict = itemState;
-                    itemState["item"] = JToken.FromObject(slots[i].item.GetItemID());
-                    itemState["number"] = JToken.FromObject(GetNumberInSlot(i));
-                    stateDict[i.ToString()] = itemState;
-                }
-            }
-            return state;
-        }
-
-        public void RestoreFromJToken(JToken state)
-        {
-            if (state is JObject stateObject)
-            {
-                slots = new InventorySlot[inventorySize];
-                IDictionary<string, JToken> stateDict = stateObject;
-                for (int i = 0; i < inventorySize; i++)
-                {
-                    if (stateDict.ContainsKey(i.ToString()) && stateDict[i.ToString()] is JObject itemState)
-                    {
-                        IDictionary<string, JToken> itemStateDict = itemState;
-                        slots[i].item = BaseItem.GetFromID(itemStateDict["item"].ToObject<string>());
-                        slots[i].number = itemStateDict["number"].ToObject<int>();
-                    }
-                }
-                InventoryUpdated?.Invoke();
-            }
         }
         #endregion
     }

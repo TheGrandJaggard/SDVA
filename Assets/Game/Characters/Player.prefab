@@ -193,12 +193,12 @@ GameObject:
   - component: {fileID: 5181583577539651839}
   - component: {fileID: 4284362324661226896}
   - component: {fileID: 3486793016409570661}
+  - component: {fileID: 3875876033499493829}
+  - component: {fileID: 8626913643212229322}
   - component: {fileID: 6874625570999162553}
   - component: {fileID: 1655558208909333954}
   - component: {fileID: 4605382225370059958}
   - component: {fileID: 7533593718207332438}
-  - component: {fileID: 4775049215868053532}
-  - component: {fileID: 3875876033499493829}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -289,6 +289,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
+--- !u!114 &3875876033499493829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3319887784825103742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8c756a4f32f0d945bb0d60bb0f29ef8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupPrefab: {fileID: 4059084997256380273, guid: 4e04974ddb1d9304eaac43c6d11b3d43, type: 3}
+--- !u!114 &8626913643212229322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3319887784825103742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b33d1dc1d4fdd9442888102f468afec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseInventorySize: 25
 --- !u!58 &6874625570999162553
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -407,32 +433,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4775049215868053532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3319887784825103742}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19fc28a888c18ce4a82d521912c49df1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventorySize: 25
---- !u!114 &3875876033499493829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3319887784825103742}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8c756a4f32f0d945bb0d60bb0f29ef8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pickupPrefab: {fileID: 4059084997256380273, guid: 4e04974ddb1d9304eaac43c6d11b3d43, type: 3}
 --- !u!1 &3437616973426533008
 GameObject:
   m_ObjectHideFlags: 0
