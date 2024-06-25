@@ -34,7 +34,7 @@ namespace SDVA.UI.InventorySystem
 
             if (itemNumber != null)
             {
-                itemNumberTextContainer?.SetActive(number > 0);
+                if (itemNumberTextContainer != null) { itemNumberTextContainer.SetActive(number > 0); }
                 itemNumber.text = number.ToString();
             }
         }
