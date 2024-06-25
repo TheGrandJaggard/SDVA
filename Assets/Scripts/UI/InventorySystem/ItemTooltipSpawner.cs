@@ -11,8 +11,8 @@ namespace SDVA.UI.InventorySystem
     {
         public override bool CanCreateTooltip()
         {
-            var item = GetComponent<IItemHolder>().GetItem();
-            if (!item) { return false; }
+            if (Input.GetMouseButton(0) == true) { return false; }
+            if (GetComponent<IItemHolder>().GetItem() == null) { return false; }
             else { return true; }
         }
 
