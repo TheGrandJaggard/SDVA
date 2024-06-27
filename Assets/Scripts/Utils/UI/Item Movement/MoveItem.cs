@@ -3,52 +3,47 @@
 namespace SDVA.Utils.UI.ItemMovement
 {
     /// <summary>
-    /// Allows a UI element to be dragged and dropped or click and dropped
-    /// to and from a container.
-    /// 
-    /// Create a subclass for the type you want to be moveable. Then place on
-    /// the UI element you want to make moveable.
-    ///
-    /// After the item is dropped it will be automatically return to the
-    /// original UI parent. It is the job of components implementing `IItemContainer`
-    /// or `IItemSource` and `IItemDestination` to update the interface after a move
-    /// has occurred.
+    /// Handles moving items between `IItemContainer`, `IItemSource`, and `IItemDestination`.
     /// </summary>
     /// <typeparam name="T">The type that represents the item being moved.</typeparam>
     public abstract class MoveItem<T> : MonoBehaviour
         where T : class
     {
-        // PRIVATE STATE
-        private IItemSource<T> source;
-
-        // LIFECYCLE METHODS
-        internal void Awake()
-        {
-            source = GetComponentInParent<IItemSource<T>>();
-        }
-
-        // PRIVATE
-
+        // PUBLIC
+        
         /// <summary>
         /// Attempt to drop items from source into destination.
         /// </summary>
         /// <param name="destination">The destination for items.</param>
-        internal void DropItemIntoDestination(IItemDestination<T> destination)
+        public static int MoveBetween(IItemSource<T> source, IItemDestination<T> destination)
         {
-            if (ReferenceEquals(destination, source)) { return; }
+            if (ReferenceEquals(destination, source)) { return 0; }
 
             // Check for swappability
             if (destination is IItemContainer<T> destinationContainer &&
                 source is IItemContainer<T> sourceContainer &&
+                sourceContainer.GetItem() != null &&
                 destinationContainer.GetItem() != null)
             {
-                var successful = AttemptSwap(sourceContainer, destinationContainer);
-                if (successful) { return; }
+                var moved = AttemptSwap(sourceContainer, destinationContainer);
+                if (moved > 0) { return moved; }
             }
 
-            AttemptSimpleTransfer(destination);
-            return;
+            if (source.GetItem() != null)
+            {
+                var moved = AttemptSimpleTransfer(source, destination);
+                if (moved > 0) { return moved; }
+            }
+
+            return 0;
         }
+
+        public static int MoveTo(IItemSource<T> source, IItemDestination<T> destination)
+        {
+            return AttemptSimpleTransfer(source, destination);
+        }
+
+        // PRIVATE
 
         /// <summary>
         /// Attempt to swap items between source and destination.
@@ -56,9 +51,9 @@ namespace SDVA.Utils.UI.ItemMovement
         /// <param name="source">First container.</param>
         /// <param name="destination">Second container.</param>
         /// <returns>Whether the attempt was successful.</returns>
-        private bool AttemptSwap(IItemContainer<T> source, IItemContainer<T> destination)
+        private static int AttemptSwap(IItemContainer<T> source, IItemContainer<T> destination)
         {
-            // Provisionally remove item from both sides. 
+            // Provisionally get info from both sides.
             var sourceNumber = source.GetNumber();
             var sourceItem = source.GetItem();
             var destinationNumber = destination.GetNumber();
@@ -74,9 +69,9 @@ namespace SDVA.Utils.UI.ItemMovement
                 source.AddItems(destinationItem, destinationNumber);
                 destination.AddItems(sourceItem, sourceNumber);
 
-                return true;
+                return sourceNumber;
             }
-            return false;
+            return 0;
         }
 
         /// <summary>
@@ -84,7 +79,7 @@ namespace SDVA.Utils.UI.ItemMovement
         /// </summary>
         /// <param name="destination">The destination for items.</param>
         /// <returns>The number of items added to destination.</returns>
-        private int AttemptSimpleTransfer(IItemDestination<T> destination)
+        private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination)
         {
             var transferred = destination.AddItems(source.GetItem(), source.GetNumber());
             source.RemoveItems(transferred);
