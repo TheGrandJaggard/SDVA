@@ -12,9 +12,11 @@ namespace SDVA.Utils.UI.ItemMovement
         // PUBLIC
         
         /// <summary>
-        /// Attempt to drop items from source into destination.
+        /// Attempt to move items from source to destination.
         /// </summary>
+        /// <param name="source">The item source.</param>
         /// <param name="destination">The destination for items.</param>
+        /// <returns>The number of items added to destination.</returns>
         public static int MoveBetween(IItemSource<T> source, IItemDestination<T> destination)
         {
             if (ReferenceEquals(destination, source)) { return 0; }
@@ -38,6 +40,24 @@ namespace SDVA.Utils.UI.ItemMovement
             return 0;
         }
 
+        /// <summary>
+        /// Attempt to move items from source to destination.
+        /// </summary>
+        /// <param name="source">The item source.</param>
+        /// <param name="destination">The destination for items.</param>
+        /// <param name="number">The number of items to move.</param>
+        /// <returns>The number of items added to destination.</returns>
+        public static int MoveTo(IItemSource<T> source, IItemDestination<T> destination, int number)
+        {
+            return AttemptSimpleTransfer(source, destination, number);
+        }
+
+        /// <summary>
+        /// Attempt to move items from source to destination.
+        /// </summary>
+        /// <param name="source">The item source.</param>
+        /// <param name="destination">The destination for items.</param>
+        /// <returns>The number of items added to destination.</returns>
         public static int MoveTo(IItemSource<T> source, IItemDestination<T> destination)
         {
             return AttemptSimpleTransfer(source, destination);
@@ -50,7 +70,7 @@ namespace SDVA.Utils.UI.ItemMovement
         /// </summary>
         /// <param name="source">First container.</param>
         /// <param name="destination">Second container.</param>
-        /// <returns>Whether the attempt was successful.</returns>
+        /// <returns>The number of items added to destination.</returns>
         private static int AttemptSwap(IItemContainer<T> source, IItemContainer<T> destination)
         {
             // Provisionally get info from both sides.
@@ -77,6 +97,22 @@ namespace SDVA.Utils.UI.ItemMovement
         /// <summary>
         /// Attempt to move items from source to destination.
         /// </summary>
+        /// <param name="source">The item source.</param>
+        /// <param name="destination">The destination for items.</param>
+        /// <param name="number">The number of items to move.</param>
+        /// <returns>The number of items added to destination.</returns>
+        private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination, int number)
+        {
+            var transferred = destination.AddItems(source.GetItem(), Mathf.Clamp(number, 0, source.GetNumber()));
+            source.RemoveItems(transferred);
+
+            return transferred;
+        }
+
+        /// <summary>
+        /// Attempt to move items from source to destination.
+        /// </summary>
+        /// <param name="source">The item source.</param>
         /// <param name="destination">The destination for items.</param>
         /// <returns>The number of items added to destination.</returns>
         private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination)
