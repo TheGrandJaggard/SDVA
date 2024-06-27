@@ -486,8 +486,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 5682867130929279322}
-  useClickNDrop: 1
+  useClick: 1
   useDragging: 0
+  enableRightClick: 1
+  enableShiftClick: 1
+  enableDoubleClick: 1
+  enableShiftDoubleClick: 1
+  aggregateOnDragPickup: 1
+  spreadOnDragDrop: 1
 --- !u!1 &1679492434186346
 GameObject:
   m_ObjectHideFlags: 0

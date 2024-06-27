@@ -328,8 +328,26 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ClickHold"",
+                    ""type"": ""Button"",
+                    ""id"": ""1e6a81a2-dd3c-4c56-a289-e7c337213338"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""SlowTap(duration=0.2)"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DoubleClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""22971f8f-0f08-4f05-9107-f830d5a2b92e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""MultiTap(tapDelay=0.05)"",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""MiddleClick"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Button"",
                     ""id"": ""03975208-b197-4f13-8e10-b218aa2a6069"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -338,11 +356,20 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                 },
                 {
                     ""name"": ""RightClick"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Button"",
                     ""id"": ""f400e60d-687d-4919-b041-8d61d9c836dd"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightClickHold"",
+                    ""type"": ""Button"",
+                    ""id"": ""9a91076b-c0f6-4ad1-bc4f-444c3d9756d7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""SlowTap(duration=0.2)"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -379,15 +406,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ClickHold"",
-                    ""type"": ""Button"",
-                    ""id"": ""1e6a81a2-dd3c-4c56-a289-e7c337213338"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": ""SlowTap(duration=0.2)"",
                     ""initialStateCheck"": false
                 }
             ],
@@ -658,17 +676,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                 },
                 {
                     ""name"": """",
-                    ""id"": ""9e92bb26-7e3b-4ec4-b06b-3c8f8e498ddc"",
-                    ""path"": ""*/{Submit}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse;Gamepad;Touch;Joystick;XR"",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""82627dcc-3b13-4ba9-841d-e4b746d6553e"",
                     ""path"": ""*/{Cancel}"",
                     ""interactions"": """",
@@ -864,6 +871,72 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                     ""action"": ""ClickHold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9e92bb26-7e3b-4ec4-b06b-3c8f8e498ddc"",
+                    ""path"": ""*/{Submit}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse;Gamepad;Touch;Joystick;XR"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b39ea9d-1aa8-4400-ae62-7b20151dbfb6"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""RightClickHold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""052a878c-4025-4452-ace0-1929e2da23c0"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DoubleClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0b71d42b-0aed-49cb-a313-dfd957901dbd"",
+                    ""path"": ""<Pen>/tip"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DoubleClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""95f9156b-ffc6-46c9-997b-dc7efe85f3c4"",
+                    ""path"": ""<Touchscreen>/touch*/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Touch"",
+                    ""action"": ""DoubleClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""df34b7b1-2988-4981-ab97-a2c6fa34d66e"",
+                    ""path"": ""<XRController>/trigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XR"",
+                    ""action"": ""DoubleClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -943,13 +1016,15 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
         m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
+        m_UI_ClickHold = m_UI.FindAction("ClickHold", throwIfNotFound: true);
+        m_UI_DoubleClick = m_UI.FindAction("DoubleClick", throwIfNotFound: true);
         m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
+        m_UI_RightClickHold = m_UI.FindAction("RightClickHold", throwIfNotFound: true);
         m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_Shift = m_UI.FindAction("Shift", throwIfNotFound: true);
-        m_UI_ClickHold = m_UI.FindAction("ClickHold", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1078,13 +1153,15 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
     private readonly InputAction m_UI_Cancel;
     private readonly InputAction m_UI_Point;
     private readonly InputAction m_UI_Click;
+    private readonly InputAction m_UI_ClickHold;
+    private readonly InputAction m_UI_DoubleClick;
     private readonly InputAction m_UI_MiddleClick;
     private readonly InputAction m_UI_RightClick;
+    private readonly InputAction m_UI_RightClickHold;
     private readonly InputAction m_UI_ScrollWheel;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_Shift;
-    private readonly InputAction m_UI_ClickHold;
     public struct UIActions
     {
         private @PlayerWorldInputActions m_Wrapper;
@@ -1094,13 +1171,15 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputAction @Point => m_Wrapper.m_UI_Point;
         public InputAction @Click => m_Wrapper.m_UI_Click;
+        public InputAction @ClickHold => m_Wrapper.m_UI_ClickHold;
+        public InputAction @DoubleClick => m_Wrapper.m_UI_DoubleClick;
         public InputAction @MiddleClick => m_Wrapper.m_UI_MiddleClick;
         public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
+        public InputAction @RightClickHold => m_Wrapper.m_UI_RightClickHold;
         public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
         public InputAction @Shift => m_Wrapper.m_UI_Shift;
-        public InputAction @ClickHold => m_Wrapper.m_UI_ClickHold;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1125,12 +1204,21 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
             @Click.started += instance.OnClick;
             @Click.performed += instance.OnClick;
             @Click.canceled += instance.OnClick;
+            @ClickHold.started += instance.OnClickHold;
+            @ClickHold.performed += instance.OnClickHold;
+            @ClickHold.canceled += instance.OnClickHold;
+            @DoubleClick.started += instance.OnDoubleClick;
+            @DoubleClick.performed += instance.OnDoubleClick;
+            @DoubleClick.canceled += instance.OnDoubleClick;
             @MiddleClick.started += instance.OnMiddleClick;
             @MiddleClick.performed += instance.OnMiddleClick;
             @MiddleClick.canceled += instance.OnMiddleClick;
             @RightClick.started += instance.OnRightClick;
             @RightClick.performed += instance.OnRightClick;
             @RightClick.canceled += instance.OnRightClick;
+            @RightClickHold.started += instance.OnRightClickHold;
+            @RightClickHold.performed += instance.OnRightClickHold;
+            @RightClickHold.canceled += instance.OnRightClickHold;
             @ScrollWheel.started += instance.OnScrollWheel;
             @ScrollWheel.performed += instance.OnScrollWheel;
             @ScrollWheel.canceled += instance.OnScrollWheel;
@@ -1143,9 +1231,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
             @Shift.started += instance.OnShift;
             @Shift.performed += instance.OnShift;
             @Shift.canceled += instance.OnShift;
-            @ClickHold.started += instance.OnClickHold;
-            @ClickHold.performed += instance.OnClickHold;
-            @ClickHold.canceled += instance.OnClickHold;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -1165,12 +1250,21 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
             @Click.started -= instance.OnClick;
             @Click.performed -= instance.OnClick;
             @Click.canceled -= instance.OnClick;
+            @ClickHold.started -= instance.OnClickHold;
+            @ClickHold.performed -= instance.OnClickHold;
+            @ClickHold.canceled -= instance.OnClickHold;
+            @DoubleClick.started -= instance.OnDoubleClick;
+            @DoubleClick.performed -= instance.OnDoubleClick;
+            @DoubleClick.canceled -= instance.OnDoubleClick;
             @MiddleClick.started -= instance.OnMiddleClick;
             @MiddleClick.performed -= instance.OnMiddleClick;
             @MiddleClick.canceled -= instance.OnMiddleClick;
             @RightClick.started -= instance.OnRightClick;
             @RightClick.performed -= instance.OnRightClick;
             @RightClick.canceled -= instance.OnRightClick;
+            @RightClickHold.started -= instance.OnRightClickHold;
+            @RightClickHold.performed -= instance.OnRightClickHold;
+            @RightClickHold.canceled -= instance.OnRightClickHold;
             @ScrollWheel.started -= instance.OnScrollWheel;
             @ScrollWheel.performed -= instance.OnScrollWheel;
             @ScrollWheel.canceled -= instance.OnScrollWheel;
@@ -1183,9 +1277,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
             @Shift.started -= instance.OnShift;
             @Shift.performed -= instance.OnShift;
             @Shift.canceled -= instance.OnShift;
-            @ClickHold.started -= instance.OnClickHold;
-            @ClickHold.performed -= instance.OnClickHold;
-            @ClickHold.canceled -= instance.OnClickHold;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -1261,12 +1352,14 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
         void OnCancel(InputAction.CallbackContext context);
         void OnPoint(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
+        void OnClickHold(InputAction.CallbackContext context);
+        void OnDoubleClick(InputAction.CallbackContext context);
         void OnMiddleClick(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
+        void OnRightClickHold(InputAction.CallbackContext context);
         void OnScrollWheel(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
-        void OnClickHold(InputAction.CallbackContext context);
     }
 }
