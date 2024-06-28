@@ -6,7 +6,7 @@ namespace SDVA.Utils.UI.ItemMovement
     /// Handles moving items between `IItemContainer`, `IItemSource`, and `IItemDestination`.
     /// </summary>
     /// <typeparam name="T">The type that represents the item being moved.</typeparam>
-    public abstract class MoveItem<T> : MonoBehaviour
+    public static class MoveItem<T>
         where T : class
     {
         // PUBLIC
@@ -25,7 +25,8 @@ namespace SDVA.Utils.UI.ItemMovement
             if (destination is IItemContainer<T> destinationContainer &&
                 source is IItemContainer<T> sourceContainer &&
                 sourceContainer.GetItem() != null &&
-                destinationContainer.GetItem() != null)
+                destinationContainer.GetItem() != null &&
+                !ReferenceEquals(sourceContainer.GetItem(), destinationContainer.GetItem()))
             {
                 var moved = AttemptSwap(sourceContainer, destinationContainer);
                 if (moved > 0) { return moved; }
@@ -61,6 +62,28 @@ namespace SDVA.Utils.UI.ItemMovement
         public static int MoveTo(IItemSource<T> source, IItemDestination<T> destination)
         {
             return AttemptSimpleTransfer(source, destination);
+        }
+
+        /// <summary>
+        /// Attempt to move all items from source inventory to destination.
+        /// </summary>
+        /// <param name="source">The item source.</param>
+        /// <param name="destination">The destination for items.</param>
+        /// <returns>The number of items added to destination.</returns>
+        public static int MoveAllFromInventoryTo(IItemSource<T> source, IItemDestination<T> destination)
+        {
+            var itemsMoved = 0;
+            var sourceItem = source.GetItem();
+            itemsMoved += AttemptSimpleTransfer(source, destination);
+
+            foreach (var rSource in source.GetRelatedSources())
+            {
+                if (ReferenceEquals(rSource.GetItem(), sourceItem))
+                {
+                    itemsMoved += AttemptSimpleTransfer(rSource, destination);
+                }
+            }
+            return itemsMoved;
         }
 
         // PRIVATE
@@ -99,11 +122,10 @@ namespace SDVA.Utils.UI.ItemMovement
         /// </summary>
         /// <param name="source">The item source.</param>
         /// <param name="destination">The destination for items.</param>
-        /// <param name="number">The number of items to move.</param>
         /// <returns>The number of items added to destination.</returns>
-        private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination, int number)
+        private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination)
         {
-            var transferred = destination.AddItems(source.GetItem(), Mathf.Clamp(number, 0, source.GetNumber()));
+            var transferred = destination.AddItems(source.GetItem(), source.GetNumber());
             source.RemoveItems(transferred);
 
             return transferred;
@@ -114,10 +136,11 @@ namespace SDVA.Utils.UI.ItemMovement
         /// </summary>
         /// <param name="source">The item source.</param>
         /// <param name="destination">The destination for items.</param>
+        /// <param name="number">The number of items to move.</param>
         /// <returns>The number of items added to destination.</returns>
-        private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination)
+        private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination, int number)
         {
-            var transferred = destination.AddItems(source.GetItem(), source.GetNumber());
+            var transferred = destination.AddItems(source.GetItem(), Mathf.Clamp(number, 0, source.GetNumber()));
             source.RemoveItems(transferred);
 
             return transferred;

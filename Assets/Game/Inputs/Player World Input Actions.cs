@@ -364,15 +364,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""RightClickHold"",
-                    ""type"": ""Button"",
-                    ""id"": ""9a91076b-c0f6-4ad1-bc4f-444c3d9756d7"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": ""SlowTap(duration=0.2)"",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""ScrollWheel"",
                     ""type"": ""PassThrough"",
                     ""id"": ""4706aec0-ffb5-40e0-81fa-31037af9e391"",
@@ -841,6 +832,17 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                 },
                 {
                     ""name"": """",
+                    ""id"": ""4b39ea9d-1aa8-4400-ae62-7b20151dbfb6"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ClickHold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""a15eba6d-dad7-41db-97c6-6bcfee7350f6"",
                     ""path"": ""<Pen>/tip"",
                     ""interactions"": """",
@@ -880,17 +882,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse;Gamepad;Touch;Joystick;XR"",
                     ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4b39ea9d-1aa8-4400-ae62-7b20151dbfb6"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""RightClickHold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1020,7 +1011,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
         m_UI_DoubleClick = m_UI.FindAction("DoubleClick", throwIfNotFound: true);
         m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
-        m_UI_RightClickHold = m_UI.FindAction("RightClickHold", throwIfNotFound: true);
         m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
@@ -1157,7 +1147,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
     private readonly InputAction m_UI_DoubleClick;
     private readonly InputAction m_UI_MiddleClick;
     private readonly InputAction m_UI_RightClick;
-    private readonly InputAction m_UI_RightClickHold;
     private readonly InputAction m_UI_ScrollWheel;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
@@ -1175,7 +1164,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
         public InputAction @DoubleClick => m_Wrapper.m_UI_DoubleClick;
         public InputAction @MiddleClick => m_Wrapper.m_UI_MiddleClick;
         public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
-        public InputAction @RightClickHold => m_Wrapper.m_UI_RightClickHold;
         public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
@@ -1216,9 +1204,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
             @RightClick.started += instance.OnRightClick;
             @RightClick.performed += instance.OnRightClick;
             @RightClick.canceled += instance.OnRightClick;
-            @RightClickHold.started += instance.OnRightClickHold;
-            @RightClickHold.performed += instance.OnRightClickHold;
-            @RightClickHold.canceled += instance.OnRightClickHold;
             @ScrollWheel.started += instance.OnScrollWheel;
             @ScrollWheel.performed += instance.OnScrollWheel;
             @ScrollWheel.canceled += instance.OnScrollWheel;
@@ -1262,9 +1247,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
             @RightClick.started -= instance.OnRightClick;
             @RightClick.performed -= instance.OnRightClick;
             @RightClick.canceled -= instance.OnRightClick;
-            @RightClickHold.started -= instance.OnRightClickHold;
-            @RightClickHold.performed -= instance.OnRightClickHold;
-            @RightClickHold.canceled -= instance.OnRightClickHold;
             @ScrollWheel.started -= instance.OnScrollWheel;
             @ScrollWheel.performed -= instance.OnScrollWheel;
             @ScrollWheel.canceled -= instance.OnScrollWheel;
@@ -1356,7 +1338,6 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
         void OnDoubleClick(InputAction.CallbackContext context);
         void OnMiddleClick(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
-        void OnRightClickHold(InputAction.CallbackContext context);
         void OnScrollWheel(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);

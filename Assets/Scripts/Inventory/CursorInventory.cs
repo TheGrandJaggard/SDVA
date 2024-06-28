@@ -4,7 +4,6 @@ using SDVA.InventorySystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using System;
 
 namespace SDVA.UI.InventorySystem
 {
@@ -13,15 +12,31 @@ namespace SDVA.UI.InventorySystem
         // CONFIG DATA
         [SerializeField] InventoryItemIcon icon;
 
+        [Header("Item Movement Settings:")]
+        [Tooltip("Whether items can be picked up by clicking.")]
         [SerializeField] bool useClick;
+        [Tooltip("Whether items are dropped after a drag ends.\n(Not recommended, but makes for a simpler system when other settings are turned off.)")]
         [SerializeField] bool useDragging;
+        [Tooltip("Whether items should be spread out between slots and aggregated from slots that they are dragged over. (useDragging must be false for this to function properly) (WIP)")]
+        [SerializeField] bool useDragSpread;
 
-        private IItemSource<BaseItem> mostRecentSource; // Used for dragging returns
-
+        [Header("Item Movement Inputs:")]
+        [Tooltip("The input that picks up and drops items.\n(Default = LeftClick)")]
+        [SerializeField] InputActionReference moveItemButton;
+        [Tooltip("The input that picks up and drops single items.\n(Default = RightClick)")]
+        [SerializeField] InputActionReference singleItemButton;
+        [Tooltip("The input that picks up all items of type in inventory.\n(Default = DoubleClick)")]
+        [SerializeField] InputActionReference pickupAllItemsButton;
+        [Tooltip("The input that changes click functionality to transfer between containers.\n(Default = Shift) (WIP)")]
+        [SerializeField] InputActionReference transferItemButton;
+        [Tooltip("The input that signals a release of items dragged.\n(Default = LeftRightClickHeld)")]
+        [SerializeField] InputActionReference moveItemButtonRelease;
+        
         // STATE
+
         private int slot;
         private Inventory inventory;
-        private PlayerWorldInputActions playerControls;
+        private IItemSource<BaseItem> mostRecentSource; // Used for dragging returns
 
         // PUBLIC
 
@@ -34,6 +49,7 @@ namespace SDVA.UI.InventorySystem
         public BaseItem GetItem() => inventory.GetSlotItem(slot);
         
         public void RemoveItems(int number) => inventory.RemoveFromSlot(slot, number);
+        public List<IItemSource<BaseItem>> GetRelatedSources() => new() { this };
         
         // PRIVATE
 
@@ -42,57 +58,31 @@ namespace SDVA.UI.InventorySystem
             inventory = new Inventory(1);
             slot = 0;
 
-            playerControls = new PlayerWorldInputActions();
-
             inventory.InventoryUpdated += Redraw;
             Redraw();
         }
 
         private void OnEnable()
         {
-            playerControls = new PlayerWorldInputActions();
-            playerControls.Enable();
-            playerControls.UI.Click.performed += StartMovement; // shift variant
-            playerControls.UI.RightClick.performed += StartSingleMovement;
-            playerControls.UI.DoubleClick.performed += StartCollectAllMovement; // shift variant
+            moveItemButton.ToInputAction().Enable();
+            singleItemButton.ToInputAction().Enable();
+            pickupAllItemsButton.ToInputAction().Enable();
+            moveItemButtonRelease.ToInputAction().Enable();
 
-            playerControls.UI.ClickHold.performed += EndDrag; // dragging only
-            playerControls.UI.ClickHold.canceled += CancelDrag; // dragging only
-            playerControls.UI.RightClickHold.performed += EndDrag; // dragging only
-            playerControls.UI.RightClickHold.canceled += CancelDrag; // dragging only
+            moveItemButton.ToInputAction().performed += StartMovement; // shift variant
+            singleItemButton.ToInputAction().performed += StartSingleMovement;
+            pickupAllItemsButton.ToInputAction().performed += StartCollectAllMovement; // shift variant
+
+            moveItemButtonRelease.ToInputAction().performed += EndDrag;
+            moveItemButtonRelease.ToInputAction().canceled += CancelDrag;
         }
 
         private void OnDisable()
         {
-            playerControls.Disable();
-        }
-
-        private void StartSingleMovement(InputAction.CallbackContext context)
-        {
-            foreach (var hitResult in RaycastMouse())
-            {
-                var hitObject = hitResult.gameObject;
-
-                if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
-                    (useClick || useDragging))
-                {
-                    var itemsMoved = MoveItem<BaseItem>.MoveTo(source, this, 1);
-                    mostRecentSource = source;
-                    if (itemsMoved > 0) { break; }
-                }
-
-                if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination) &&
-                    useClick)
-                {
-                    var itemsMoved = MoveItem<BaseItem>.MoveTo(this, destination, 1);
-                    if (itemsMoved > 0) { break; }
-                }
-            }
-        }
-        
-        private void StartCollectAllMovement(InputAction.CallbackContext context)
-        {
-            throw new NotImplementedException();
+            moveItemButton.ToInputAction().Disable();
+            singleItemButton.ToInputAction().Disable();
+            pickupAllItemsButton.ToInputAction().Disable();
+            moveItemButtonRelease.ToInputAction().Disable();
         }
 
         private void StartMovement(InputAction.CallbackContext context)
@@ -101,6 +91,13 @@ namespace SDVA.UI.InventorySystem
             {
                 var hitObject = hitResult.gameObject;
 
+                if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination) &&
+                    useClick)
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveBetween(this, destination);
+                    if (itemsMoved > 0) { break; }
+                }
+
                 if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
                     (useClick || useDragging))
                 {
@@ -108,11 +105,43 @@ namespace SDVA.UI.InventorySystem
                     mostRecentSource = source;
                     if (itemsMoved > 0) { break; }
                 }
+            }
+        }
+
+        private void StartSingleMovement(InputAction.CallbackContext context)
+        {
+            foreach (var hitResult in RaycastMouse())
+            {
+                var hitObject = hitResult.gameObject;
 
                 if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination) &&
                     useClick)
                 {
-                    var itemsMoved = MoveItem<BaseItem>.MoveBetween(this, destination);
+                    var itemsMoved = MoveItem<BaseItem>.MoveTo(this, destination, 1);
+                    if (itemsMoved > 0) { break; }
+                }
+
+                if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
+                    (useClick || useDragging))
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveTo(source, this, source.GetNumber() / 2);
+                    mostRecentSource = source;
+                    if (itemsMoved > 0) { break; }
+                }
+            }
+        }
+        
+        private void StartCollectAllMovement(InputAction.CallbackContext context)
+        {
+            foreach (var hitResult in RaycastMouse())
+            {
+                var hitObject = hitResult.gameObject;
+
+                if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
+                    (useClick || useDragging))
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveAllFromInventoryTo(source, this);
+                    mostRecentSource = source;
                     if (itemsMoved > 0) { break; }
                 }
             }

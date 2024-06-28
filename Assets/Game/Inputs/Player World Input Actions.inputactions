@@ -342,15 +342,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "RightClickHold",
-                    "type": "Button",
-                    "id": "9a91076b-c0f6-4ad1-bc4f-444c3d9756d7",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "SlowTap(duration=0.2)",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "ScrollWheel",
                     "type": "PassThrough",
                     "id": "4706aec0-ffb5-40e0-81fa-31037af9e391",
@@ -819,6 +810,17 @@
                 },
                 {
                     "name": "",
+                    "id": "4b39ea9d-1aa8-4400-ae62-7b20151dbfb6",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ClickHold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "a15eba6d-dad7-41db-97c6-6bcfee7350f6",
                     "path": "<Pen>/tip",
                     "interactions": "",
@@ -858,17 +860,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
                     "action": "Submit",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4b39ea9d-1aa8-4400-ae62-7b20151dbfb6",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "RightClickHold",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

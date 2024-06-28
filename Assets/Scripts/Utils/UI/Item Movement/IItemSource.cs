@@ -1,4 +1,6 @@
-﻿namespace SDVA.Utils.UI.ItemMovement
+﻿using System.Collections.Generic;
+
+namespace SDVA.Utils.UI.ItemMovement
 {
     /// <summary>
     /// Components that implement this interfaces can act as the source for
@@ -22,5 +24,11 @@
         /// </summary>
         /// <param name="number">This should never exceed the number returned by `GetNumber`.</param>
         void RemoveItems(int number);
+
+        /// <summary>
+        /// Gets related sources. (eg. other slots in the same inventory)
+        /// </summary>
+        /// <returns>A list of related IItemSources.</returns>
+        List<IItemSource<T>> GetRelatedSources();
     }
 }
