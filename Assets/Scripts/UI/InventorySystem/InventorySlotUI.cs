@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 using SDVA.Utils.UI.ItemMovement;
 using SDVA.InventorySystem;
 
@@ -29,10 +31,9 @@ namespace SDVA.UI.InventorySystem
         public int GetNumber() => inventory.GetSlotNumber(slot);
 
         public BaseItem GetItem() => inventory.GetSlotItem(slot);
-        
-        public void RemoveItems(int number)
-        {
-            inventory.RemoveFromSlot(slot, number);
-        }
+
+        public void RemoveItems(int number) => inventory.RemoveFromSlot(slot, number);
+
+        public List<IItemSource<BaseItem>> GetRelatedSources() => transform.parent.GetComponentsInChildren<IItemSource<BaseItem>>().ToList();
     }
 }
