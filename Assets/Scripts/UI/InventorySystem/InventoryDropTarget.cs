@@ -1,5 +1,5 @@
 using UnityEngine;
-using SDVA.Utils.UI.Dragging;
+using SDVA.Utils.UI.ItemMovement;
 using SDVA.InventorySystem;
 
 namespace SDVA.UI.InventorySystem
@@ -10,7 +10,7 @@ namespace SDVA.UI.InventorySystem
     /// Must be placed on the root canvas where items can be dragged. Will be
     /// called if dropped over empty space. 
     /// </summary>
-    public class InventoryDropTarget : MonoBehaviour, IDragDestination<BaseItem>
+    public class InventoryDropTarget : MonoBehaviour, IItemDestination<BaseItem>
     {
         public int AddItems(BaseItem item, int number)
         {

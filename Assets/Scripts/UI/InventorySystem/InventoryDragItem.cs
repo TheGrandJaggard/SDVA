@@ -1,5 +1,5 @@
 ﻿using SDVA.InventorySystem;
-using SDVA.Utils.UI.Dragging;
+using SDVA.Utils.UI.ItemMovement;
 
 namespace SDVA.UI.InventorySystem
 {

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using SDVA.Utils.UI.Dragging;
+using SDVA.Utils.UI.ItemMovement;
 using SDVA.InventorySystem;
 
 namespace SDVA.UI.InventorySystem
 {
-    public class InventorySlotUI : MonoBehaviour, IItemHolder, IDragContainer<BaseItem>
+    public class InventorySlotUI : MonoBehaviour, IItemHolder, IItemContainer<BaseItem>
     {
         // CONFIG DATA
         [SerializeField] InventoryItemIcon icon = null;
