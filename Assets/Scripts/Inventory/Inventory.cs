@@ -12,10 +12,6 @@ namespace SDVA.InventorySystem
     /// </summary>
     public class Inventory
     {
-        // CONFIG DATA
-        [Tooltip("Default size")]
-        [SerializeField] int inventorySize = 20;
-
         // STATE
         InventorySlot[] slots;
 

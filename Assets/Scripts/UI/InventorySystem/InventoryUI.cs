@@ -10,21 +10,17 @@ namespace SDVA.UI.InventorySystem
     public class InventoryUI : MonoBehaviour
     {
         // CONFIG DATA
-        [SerializeField] InventorySlotUI InventoryItemPrefab = null;
+        [SerializeField] InventorySlotUI InventoryItemPrefab;
 
         // CACHE
         Inventory playerInventory;
 
         // LIFECYCLE METHODS
 
-        private void Awake() 
+        private void Start()
         {
             playerInventory = Inventory.GetPlayerInventory();
             playerInventory.InventoryUpdated += Redraw;
-        }
-
-        private void Start()
-        {
             Redraw();
         }
 
