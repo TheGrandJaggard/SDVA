@@ -4,6 +4,7 @@ using SDVA.InventorySystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using System;
 
 namespace SDVA.UI.InventorySystem
 {
@@ -51,14 +52,28 @@ namespace SDVA.UI.InventorySystem
         {
             playerControls = new PlayerWorldInputActions();
             playerControls.Enable();
-            playerControls.UI.Click.performed += StartMovement;
-            playerControls.UI.ClickHold.performed += EndDrag;
-            playerControls.UI.ClickHold.canceled += CancelDrag;
+            playerControls.UI.Click.performed += StartMovement; // shift variant
+            playerControls.UI.RightClick.performed += StartSingleMovement;
+            playerControls.UI.DoubleClick.performed += StartCollectAllMovement; // shift variant
+
+            playerControls.UI.ClickHold.performed += EndDrag; // dragging only
+            playerControls.UI.ClickHold.canceled += CancelDrag; // dragging only
+            playerControls.UI.RightClickHold.performed += EndDrag; // dragging only
+            playerControls.UI.RightClickHold.canceled += CancelDrag; // dragging only
         }
 
         private void OnDisable()
         {
             playerControls.Disable();
+        }
+
+        private void StartSingleMovement(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
+        }
+        private void StartCollectAllMovement(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
         }
 
         private void StartMovement(InputAction.CallbackContext context)
