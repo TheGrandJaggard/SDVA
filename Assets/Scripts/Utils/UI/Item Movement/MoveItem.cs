@@ -18,22 +18,14 @@ namespace SDVA.Utils.UI.ItemMovement
     public abstract class MoveItem<T> : MonoBehaviour
         where T : class
     {
-        // PRIVATE STATE
-        private IItemSource<T> source;
-
-        // LIFECYCLE METHODS
-        internal void Awake()
-        {
-            source = GetComponentInParent<IItemSource<T>>();
-        }
-
         // PRIVATE
 
         /// <summary>
         /// Attempt to drop items from source into destination.
         /// </summary>
+        /// <param name="source">The items' source.</param>
         /// <param name="destination">The destination for items.</param>
-        internal void DropItemIntoDestination(IItemDestination<T> destination)
+        internal void DropItemIntoDestination(IItemSource<T> source, IItemDestination<T> destination)
         {
             if (ReferenceEquals(destination, source)) { return; }
 
@@ -46,7 +38,7 @@ namespace SDVA.Utils.UI.ItemMovement
                 if (successful) { return; }
             }
 
-            AttemptSimpleTransfer(destination);
+            AttemptSimpleTransfer(source, destination);
             return;
         }
 
@@ -64,7 +56,7 @@ namespace SDVA.Utils.UI.ItemMovement
             var destinationNumber = destination.GetNumber();
             var destinationItem = destination.GetItem();
             
-            // if both the source and destination can recive each other's items
+            // If both the source and destination can recive each other's items
             if (sourceNumber <= destination.MaxAcceptable(sourceItem)
                 && destinationNumber <= source.MaxAcceptable(destinationItem))
             {
@@ -84,7 +76,7 @@ namespace SDVA.Utils.UI.ItemMovement
         /// </summary>
         /// <param name="destination">The destination for items.</param>
         /// <returns>The number of items added to destination.</returns>
-        private int AttemptSimpleTransfer(IItemDestination<T> destination)
+        private int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination)
         {
             var transferred = destination.AddItems(source.GetItem(), source.GetNumber());
             source.RemoveItems(transferred);
