@@ -69,8 +69,27 @@ namespace SDVA.UI.InventorySystem
 
         private void StartSingleMovement(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            foreach (var hitResult in RaycastMouse())
+            {
+                var hitObject = hitResult.gameObject;
+
+                if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
+                    (useClick || useDragging))
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveTo(source, this, 1);
+                    mostRecentSource = source;
+                    if (itemsMoved > 0) { break; }
+                }
+
+                if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination) &&
+                    useClick)
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveTo(this, destination, 1);
+                    if (itemsMoved > 0) { break; }
+                }
+            }
         }
+        
         private void StartCollectAllMovement(InputAction.CallbackContext context)
         {
             throw new NotImplementedException();
