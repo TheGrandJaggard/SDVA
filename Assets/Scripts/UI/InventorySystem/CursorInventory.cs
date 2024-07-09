@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using SDVA.Utils.UI.ItemMovement;
 using SDVA.InventorySystem;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 namespace SDVA.UI.InventorySystem
 {
@@ -8,20 +11,134 @@ namespace SDVA.UI.InventorySystem
     {
         // CONFIG DATA
         [SerializeField] CursorItemIcon icon;
+        [SerializeField] bool useClickNDrop;
+        [SerializeField] bool useDragging;
+
+        private IItemSource<BaseItem> mostRecentSource; // Used for dragging returns
 
         // STATE
-        int slot;
-        Inventory inventory;
+        private int slot;
+        private Inventory inventory;
+        private PlayerWorldInputActions playerControls;
 
         // PUBLIC
+
+        public int MaxAcceptable(BaseItem item) => item?.GetMaxStackSize() ?? 0;
+
+        public int AddItems(BaseItem item, int number) => inventory.AddToSlot(slot, item, number);
+
+        public int GetNumber() => inventory.GetSlotNumber(slot);
+
+        public BaseItem GetItem() => inventory.GetSlotItem(slot);
+        
+        public void RemoveItems(int number) => inventory.RemoveFromSlot(slot, number);
+        
+        // PRIVATE
 
         private void Awake()
         {
             inventory = new Inventory(1);
             slot = 0;
 
+            playerControls = new PlayerWorldInputActions();
+
             inventory.InventoryUpdated += Redraw;
             Redraw();
+        }
+
+        private void OnEnable()
+        {
+            playerControls = new PlayerWorldInputActions();
+            playerControls.Enable();
+            playerControls.UI.Click.performed += StartMovement;
+            playerControls.UI.ClickHold.performed += EndDrag;
+            playerControls.UI.ClickHold.canceled += CancelDrag;
+        }
+
+        private void OnDisable()
+        {
+            playerControls.Disable();
+        }
+
+        private void StartMovement(InputAction.CallbackContext context)
+        {
+            foreach (var hitResult in RaycastMouse())
+            {
+                var hitObject = hitResult.gameObject;
+
+                if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
+                    (useClickNDrop || useDragging))
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveBetween(source, this);
+                    mostRecentSource = source;
+                    if (itemsMoved > 0) { break; }
+                }
+
+                if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination) &&
+                    useClickNDrop)
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveBetween(this, destination);
+                    if (itemsMoved > 0) { break; }
+                }
+            }
+        }
+
+        private void EndDrag(InputAction.CallbackContext context)
+        {
+            if (!useDragging) { return; }
+
+            foreach (var hitResult in RaycastMouse())
+            {
+                var hitObject = hitResult.gameObject;
+
+                if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination))
+                {
+                    MoveItem<BaseItem>.MoveBetween(this, destination);
+                    break;
+                }
+            }
+
+            // If we are dragging from somewhere and we are still holding items
+            if (mostRecentSource != null && GetNumber() > 0)
+            {
+                if (mostRecentSource is IItemContainer<BaseItem> mostRecentSourceContainer)
+                {
+                    MoveItem<BaseItem>.MoveTo(this, mostRecentSourceContainer);
+                }
+                else
+                {
+                    Debug.LogWarning("Items destroyed because they could not be placed back where they came from after drag.");
+                }
+                mostRecentSource = null;
+            }
+        }
+
+        private void CancelDrag(InputAction.CallbackContext context)
+        {
+            if (useClickNDrop || !useDragging) { return; }
+            if (mostRecentSource is IItemContainer<BaseItem> mostRecentSourceContainer)
+            {
+                MoveItem<BaseItem>.MoveTo(this, mostRecentSourceContainer);
+            }
+            else
+            {
+                Debug.LogWarning("Items destroyed because they could not be placed back where they came from after drag.");
+            }
+            mostRecentSource = null;
+        }
+
+        private List<RaycastResult> RaycastMouse()
+        {
+            var pointerData = new PointerEventData(EventSystem.current)
+            {
+                pointerId = -1,
+                position = Input.mousePosition
+            };
+            var results = new List<RaycastResult>();
+
+            EventSystem.current.RaycastAll(pointerData, results);
+            
+            return results;
         }
 
         private void Redraw()
@@ -36,15 +153,5 @@ namespace SDVA.UI.InventorySystem
                 icon.SetItem(inventory.GetSlotItem(slot), inventory.GetSlotNumber(slot));
             }
         }
-
-        public int MaxAcceptable(BaseItem item) => item?.GetMaxStackSize() ?? 0;
-
-        public int AddItems(BaseItem item, int number) => inventory.AddToSlot(slot, item, number);
-
-        public int GetNumber() => inventory.GetSlotNumber(slot);
-
-        public BaseItem GetItem() => inventory.GetSlotItem(slot);
-        
-        public void RemoveItems(int number) => inventory.RemoveFromSlot(slot, number);
     }
 }
