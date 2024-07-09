@@ -1,17 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using SDVA.Utils.UI.ItemMovement;
 using SDVA.InventorySystem;
+using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
 namespace SDVA.UI.InventorySystem
 {
-    public class CursorInventory : MonoBehaviour, IItemTransitionContainer<BaseItem>
+    public class CursorInventory : MonoBehaviour, IItemContainer<BaseItem>
     {
         // CONFIG DATA
-        [SerializeField] CursorItemIcon icon;
-        [SerializeField] bool useClickNDrop;
+        [SerializeField] InventoryItemIcon icon;
+
+        [SerializeField] bool useClick;
         [SerializeField] bool useDragging;
 
         private IItemSource<BaseItem> mostRecentSource; // Used for dragging returns
@@ -23,7 +24,7 @@ namespace SDVA.UI.InventorySystem
 
         // PUBLIC
 
-        public int MaxAcceptable(BaseItem item) => item?.GetMaxStackSize() ?? 0;
+        public int MaxAcceptable(BaseItem item) => item != null ? item.GetMaxStackSize() : 0;
 
         public int AddItems(BaseItem item, int number) => inventory.AddToSlot(slot, item, number);
 
@@ -67,7 +68,7 @@ namespace SDVA.UI.InventorySystem
                 var hitObject = hitResult.gameObject;
 
                 if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
-                    (useClickNDrop || useDragging))
+                    (useClick || useDragging))
                 {
                     var itemsMoved = MoveItem<BaseItem>.MoveBetween(source, this);
                     mostRecentSource = source;
@@ -75,7 +76,7 @@ namespace SDVA.UI.InventorySystem
                 }
 
                 if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination) &&
-                    useClickNDrop)
+                    useClick)
                 {
                     var itemsMoved = MoveItem<BaseItem>.MoveBetween(this, destination);
                     if (itemsMoved > 0) { break; }
@@ -115,7 +116,7 @@ namespace SDVA.UI.InventorySystem
 
         private void CancelDrag(InputAction.CallbackContext context)
         {
-            if (useClickNDrop || !useDragging) { return; }
+            if (useClick || !useDragging) { return; }
             if (mostRecentSource is IItemContainer<BaseItem> mostRecentSourceContainer)
             {
                 MoveItem<BaseItem>.MoveTo(this, mostRecentSourceContainer);
