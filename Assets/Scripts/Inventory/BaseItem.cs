@@ -23,10 +23,10 @@ namespace SDVA.InventorySystem
         [Tooltip("The UI icon to represent this item in the inventory.")]
         [SerializeField] Sprite icon;
         [Tooltip("The maximum number of these items that can be held in one slot.")]
-        [SerializeField] int stackSize = 100;
+        [SerializeField] int stackSize = 50;
         
         [Tooltip("The default price for this item.")]
-        [SerializeField] int sellPrice = 100;
+        [SerializeField] int sellPrice = 0;
 
         // STATE
         static Dictionary<string, BaseItem> itemLookupCache;
@@ -64,34 +64,43 @@ namespace SDVA.InventorySystem
             return itemLookupCache[itemID];
         }
 
+        ///<returns>The UUID of this item.</returns>
         public string GetItemID() => itemID;
 
+        ///<returns>The name of this item.</returns>
         public string GetDisplayName() => displayName;
 
+        ///<returns>The description of this item.</returns>
         public string GetDescription() => description;
 
+        ///<returns>The icon of this item.</returns>
         public Sprite GetIcon() => icon;
 
+        ///<returns>The animation frames of this item.</returns>
+        public Sprite[] GetAnimation() => new Sprite[] { icon };
+
+        ///<returns>The max number of items of this type that can be held in a single stack by default.</returns>
         public int GetMaxStackSize() => stackSize;
 
+        ///<returns>The base sell price of this item.</returns>
         public int GetSellPrice() => sellPrice;
 
+        ///<returns>The type of this item.</returns>
         public abstract string GetItemType();
 
         /// <summary>
         /// The action performed on a left-click (by default).
         /// </summary>
         /// <param name="caller">The inventory (player) that called this action.</param>
-        public abstract void PrimaryAction(Inventory caller);
+        public abstract void PrimaryAction(Inventory caller); // Should this really take an inventory?
 
         /// <summary>
         /// The action performed on a right-click (by default).
         /// </summary>
         /// <param name="caller">The inventory (player) that called this action.</param>
-        public abstract void SecondaryAction(Inventory caller);
+        public abstract void SecondaryAction(Inventory caller); // Should this really take an inventory?
 
-        // PRIVATE
-
+        #region UUID Serialization
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
             // Generate and save a new UUID if this is blank.
@@ -105,5 +114,6 @@ namespace SDVA.InventorySystem
         {
             // Required by the ISerializationCallbackReceiver
         }
+        #endregion
     }
 }

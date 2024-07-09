@@ -33,25 +33,13 @@ namespace SDVA.InventorySystem
         public BaseItem GetItem() => item;
 
         public int GetNumber() => numItemsContained;
-        
-        // CACHED REFERENCE
-        Inventory inventory;
 
-        // LIFECYCLE METHODS
-
-        private void Awake()
-        {
-            var player = GameObject.FindGameObjectWithTag("Player"); // TODO not multiplayer friendly
-            inventory = player.GetComponent<Inventory>();
-        }
-
-        // PUBLIC
-
-        public bool CanBePickedUp() => inventory.HasSpaceFor(item);
+        public bool CanBePickedUp() => Inventory.GetPlayerInventory().HasSpaceFor(item);
 
         public void PickupItem()
         {
-            var numItemsAdded = inventory.AddToAnySlot(item, numItemsContained);
+            if (CanBePickedUp() == false) { return; }
+            var numItemsAdded = Inventory.GetPlayerInventory().AddToAnySlot(item, numItemsContained);
             numItemsContained -= numItemsAdded;
             if (numItemsContained <= 0)
             {
