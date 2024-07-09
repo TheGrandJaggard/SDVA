@@ -74,8 +74,8 @@ namespace SDVA.InventorySystem
         /// How many more items of type item can fit in this inventory?
         /// </summary>
         /// <param name="item">The item to search for.</param>
-        /// <returns>The max number of items that this inventory can recive.</returns>
-        public int GetMaxAcceptable(BaseItem item)
+        /// <returns>The max number of items of type item that this inventory can recive.</returns>
+        public int GetSpaceRemaining(BaseItem item)
         {
             if (!HasSpaceFor(item)) { return 0; }
 
