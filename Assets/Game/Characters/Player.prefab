@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b33d1dc1d4fdd9442888102f468afec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseInventorySize: 25
+  baseInventorySize: 24
 --- !u!58 &6874625570999162553
 CircleCollider2D:
   m_ObjectHideFlags: 0
