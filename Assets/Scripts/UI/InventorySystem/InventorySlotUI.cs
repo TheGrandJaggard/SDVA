@@ -34,6 +34,11 @@ namespace SDVA.UI.InventorySystem
 
         public void RemoveItems(int number) => inventory.RemoveFromSlot(slot, number);
 
-        public List<IItemSource<BaseItem>> GetRelatedSources() => transform.parent.GetComponentsInChildren<IItemSource<BaseItem>>().ToList();
+        public List<IItemSource<BaseItem>> GetRelatedSources()
+        {
+            var related = transform.parent.GetComponentsInChildren<IItemSource<BaseItem>>().ToList();
+            related.Remove(this);
+            return related;
+        }
     }
 }

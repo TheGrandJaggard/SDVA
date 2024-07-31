@@ -49,7 +49,8 @@ namespace SDVA.UI.InventorySystem
         public BaseItem GetItem() => inventory.GetSlotItem(slot);
         
         public void RemoveItems(int number) => inventory.RemoveFromSlot(slot, number);
-        public List<IItemSource<BaseItem>> GetRelatedSources() => new() { this };
+
+        public List<IItemSource<BaseItem>> GetRelatedSources() => new();
         
         // PRIVATE
 
