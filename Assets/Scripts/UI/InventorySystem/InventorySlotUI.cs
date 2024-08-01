@@ -9,11 +9,12 @@ namespace SDVA.UI.InventorySystem
     public class InventorySlotUI : MonoBehaviour, IItemHolder, IItemContainer<BaseItem>
     {
         // CONFIG DATA
-        [SerializeField] InventoryItemIcon icon = null;
+        [SerializeField] InventoryItemIcon icon;
 
         // STATE
-        int slot;
-        Inventory inventory;
+
+        private int slot;
+        private Inventory inventory;
 
         // PUBLIC
 

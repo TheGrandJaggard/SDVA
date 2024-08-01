@@ -4,6 +4,7 @@ using SDVA.InventorySystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using SDVA.Utils;
 
 namespace SDVA.UI.InventorySystem
 {
@@ -29,6 +30,8 @@ namespace SDVA.UI.InventorySystem
         [SerializeField] InputActionReference pickupAllItemsButton;
         [Tooltip("The input that changes click functionality to transfer between containers.\n(Default = Shift) (WIP)")]
         [SerializeField] InputActionReference transferItemButton;
+        [Tooltip("The input that opens a custom menu for the item clicked item.\n(Default = LeftRightClick) (WIP)")]
+        [SerializeField] InputActionReference openActionMenuButton;
         [Tooltip("The input that signals a release of items dragged.\n(Default = LeftRightClickHeld)")]
         [SerializeField] InputActionReference moveItemButtonRelease;
         
@@ -37,6 +40,7 @@ namespace SDVA.UI.InventorySystem
         private int slot;
         private Inventory inventory;
         private IItemSource<BaseItem> mostRecentSource; // Used for dragging returns
+        private CardinalDirections placementFacing;
 
         // PUBLIC
 
