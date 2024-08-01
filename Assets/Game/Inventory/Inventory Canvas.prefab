@@ -486,8 +486,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 5682867130929279322}
-  useClickNDrop: 1
+  useClick: 1
   useDragging: 0
+  useDragSpread: 1
+  moveItemButton: {fileID: -1406595985899731281, guid: 352338be27a34704a92fc1b9b6f8ba8d, type: 3}
+  singleItemButton: {fileID: -3941600806691756491, guid: 352338be27a34704a92fc1b9b6f8ba8d, type: 3}
+  transferItemButton: {fileID: -5577157132835416067, guid: 352338be27a34704a92fc1b9b6f8ba8d, type: 3}
+  pickupAllItemsButton: {fileID: 280697333449153566, guid: 352338be27a34704a92fc1b9b6f8ba8d, type: 3}
+  moveItemButtonRelease: {fileID: -5193243384877145555, guid: 352338be27a34704a92fc1b9b6f8ba8d, type: 3}
 --- !u!1 &1679492434186346
 GameObject:
   m_ObjectHideFlags: 0
