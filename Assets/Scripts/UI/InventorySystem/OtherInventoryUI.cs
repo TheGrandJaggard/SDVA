@@ -1,4 +1,4 @@
-﻿using SDVA.InventorySystem;
+using SDVA.InventorySystem;
 using UnityEngine;
 
 namespace SDVA.UI.InventorySystem
@@ -7,20 +7,20 @@ namespace SDVA.UI.InventorySystem
     /// To be placed on the root of the inventory UI. Handles spawning all the
     /// inventory slot prefabs.
     /// </summary>
-    public class InventoryUI : MonoBehaviour
+    public class OtherInventoryUI : MonoBehaviour
     {
         // CONFIG DATA
-        [SerializeField] InventorySlotUI InventoryItemPrefab;
+        [SerializeField] InventorySlotUI inventoryItemPrefab;
 
         // CACHE
-        Inventory playerInventory;
+        private Inventory inventory;
 
         // LIFECYCLE METHODS
 
-        private void Start()
+        public void Setup(Inventory inventory)
         {
-            playerInventory = Inventory.GetPlayerInventory();
-            playerInventory.InventoryUpdated += Redraw;
+            this.inventory = inventory;
+            inventory.InventoryUpdated += Redraw;
             Redraw();
         }
 
@@ -33,10 +33,10 @@ namespace SDVA.UI.InventorySystem
                 Destroy(child.gameObject);
             }
 
-            for (int i = 0; i < playerInventory.GetSize(); i++)
+            for (int i = 0; i < inventory.GetSize(); i++)
             {
-                var itemUI = Instantiate(InventoryItemPrefab, transform);
-                itemUI.Setup(playerInventory, i);
+                var itemUI = Instantiate(inventoryItemPrefab, transform);
+                itemUI.Setup(inventory, i);
             }
         }
     }

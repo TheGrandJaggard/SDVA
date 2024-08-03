@@ -10,7 +10,7 @@ namespace SDVA.InventorySystem
     /// slots are available.
     ///
     /// This component should be placed on the GameObject tagged "Player".
-    /// This component should be generic enough to be placed on chests
+    /// This component should be generic enough to be placed on chests.
     /// </summary>
     public class InventoryComponent : MonoBehaviour, IJsonSaveable
     {
@@ -19,7 +19,7 @@ namespace SDVA.InventorySystem
         [SerializeField] int baseInventorySize = 20;
 
         // STATE
-        Inventory inv;
+        private Inventory inv;
 
         private void Awake()
         {
