@@ -9,7 +9,10 @@ namespace SDVA.InventorySystem
     public class ChestInventoryComponent : InventoryComponent, IGuiProvider
     {
         // CONFIG DATA
-        [SerializeField] GameObject guiScreen;
+        [SerializeField] GameObject guiPrefab;
+
+        // STATE
+        private GameObject guiObject;
 
         /// <summary>
         /// Sets the chest's state.
@@ -19,7 +22,7 @@ namespace SDVA.InventorySystem
         {
             if (isOpen)
             {
-                Debug.Log("Open Chest");
+                Debug.Log("Open Chest"); // TODO
             }
             else
             {
@@ -29,11 +32,18 @@ namespace SDVA.InventorySystem
 
         public GameObject SetupGui(Transform parent)
         {
-            var gui = Instantiate(guiScreen, parent);
-            gui.GetComponentInChildren<OtherInventoryUI>().Setup(GetInventory());
+            guiObject = Instantiate(guiPrefab, parent);
+            guiObject.GetComponentInChildren<OtherInventoryUI>().Setup(GetInventory());
 
             ChestOpen(true);
-            return gui;
+            return guiObject;
+        }
+
+        public void ShutDownGui()
+        {
+            ChestOpen(false);
+            guiObject.GetComponentInChildren<OtherInventoryUI>().ShutDown();
+            Destroy(guiObject);
         }
     }
 }

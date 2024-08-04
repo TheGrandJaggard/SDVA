@@ -9,5 +9,10 @@ namespace SDVA.UI.InventorySystem
         /// </summary>
         /// <param name="parent">The parent of the GUI to be instantiated.</param>
         public GameObject SetupGui(Transform parent);
+
+        /// <summary>
+        /// Saves state of GUI and destroys it.
+        /// </summary>
+        public void ShutDownGui();
     }
 }

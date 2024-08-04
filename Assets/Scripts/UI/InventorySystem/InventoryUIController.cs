@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SDVA.UI.InventorySystem
 {
-    public class InventoryController : MonoBehaviour
+    public class InventoryUIController : MonoBehaviour
     {
         [SerializeField] GameObject guiParent;
         private Dictionary<IGuiProvider, GameObject> guis;
@@ -19,7 +19,7 @@ namespace SDVA.UI.InventorySystem
         /// <param name="provider">The provider for the GUI to be added.</param>
         public void AddGuiToOtherTab(IGuiProvider provider)
         {
-            Debug.Log("Adding GUI to other tab");
+            // Debug.Log("Adding GUI to other tab");
             var gui = provider.SetupGui(guiParent.transform);
             guis.Add(provider, gui);
         }
@@ -30,8 +30,8 @@ namespace SDVA.UI.InventorySystem
         /// <param name="provider">The provider for the GUI to be removed.</param>
         public void RemoveGuiFromOtherTab(IGuiProvider provider)
         {
-            Debug.Log("Removing GUI from other tab");
-            Destroy(guis[provider]);
+            // Debug.Log("Removing GUI from other tab");
+            provider.ShutDownGui();
             guis.Remove(provider);
         }
     }

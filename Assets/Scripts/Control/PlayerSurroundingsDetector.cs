@@ -13,7 +13,7 @@ namespace SDVA.Control
         [SerializeField] float guiProviderRange = 1f;
         [SerializeField] float itemMagnetRange = 3f;
         [SerializeField] float itemMagnetMovementSpeed = 0.1f;
-        [SerializeField] InventoryController inventoryController;
+        [SerializeField] InventoryUIController inventoryController;
         private List<GameObject> guiProvidersInRange;
 
         private void Awake()

@@ -342,7 +342,7 @@ public partial class @PlayerWorldInputActions: IInputActionCollection2, IDisposa
                     ""id"": ""22971f8f-0f08-4f05-9107-f830d5a2b92e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap(tapDelay=0.05)"",
+                    ""interactions"": ""MultiTap(tapDelay=0.75)"",
                     ""initialStateCheck"": false
                 },
                 {

@@ -1,3 +1,4 @@
+using System;
 using SDVA.InventorySystem;
 using UnityEngine;
 
@@ -22,6 +23,11 @@ namespace SDVA.UI.InventorySystem
             this.inventory = inventory;
             inventory.InventoryUpdated += Redraw;
             Redraw();
+        }
+
+        public void ShutDown()
+        {
+            inventory.InventoryUpdated -= Redraw;
         }
 
         // PRIVATE
