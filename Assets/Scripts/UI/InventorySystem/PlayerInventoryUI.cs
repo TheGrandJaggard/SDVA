@@ -1,5 +1,6 @@
-﻿using SDVA.InventorySystem;
-using UnityEngine;
+﻿using UnityEngine;
+using SDVA.InventorySystem;
+using SDVA.Utils;
 
 namespace SDVA.UI.InventorySystem
 {
@@ -28,15 +29,41 @@ namespace SDVA.UI.InventorySystem
 
         private void Redraw()
         {
-            foreach (Transform child in transform)
+            var goI = 0;
+            for (int invI = 0; invI < playerInventory.GetSize(); goI++)
             {
-                Destroy(child.gameObject);
+                Transform child;
+                try
+                {
+                    child = transform.GetChild(goI);
+                    if (child.gameObject.IsDestroyed())
+                    {
+                        throw new UnityException();
+                    }
+                }
+                catch (UnityException)
+                {
+                    child = Instantiate(inventoryItemPrefab, transform).transform;
+                    child.SetAsFirstSibling();
+                    goI++;
+                }
+
+                if (child.TryGetComponent<InventorySlotUI>(out var itemUI))
+                {
+                    itemUI.Setup(playerInventory, invI);
+                    invI++;
+                }
+                else
+                {
+                    child.gameObject.Destroy();
+                }
             }
 
-            for (int i = 0; i < playerInventory.GetSize(); i++)
+            for (; goI < transform.childCount; goI++)
             {
-                var itemUI = Instantiate(inventoryItemPrefab, transform);
-                itemUI.Setup(playerInventory, i);
+                Transform child = transform.GetChild(goI);
+
+                child.gameObject.Destroy();
             }
         }
     }
