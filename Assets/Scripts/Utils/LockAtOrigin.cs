@@ -9,7 +9,7 @@ namespace SDVA.Utils
             {
                 if (transform.position != new Vector3())
                 {
-                    Debug.LogError("This object is not set to the origin", this);
+                    Debug.LogError("This object was not set to the origin", this);
                     transform.position = new();
                 }
             }

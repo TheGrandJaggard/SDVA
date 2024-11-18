@@ -118,7 +118,7 @@ namespace SDVA.Saving
         private void CaptureAsToken(JObject state)
         {
             IDictionary<string, JToken> stateDict = state;
-            foreach (JsonSaveableEntity saveable in FindObjectsOfType<JsonSaveableEntity>())
+            foreach (JsonSaveableEntity saveable in FindObjectsByType<JsonSaveableEntity>(FindObjectsSortMode.None))
             {
                 stateDict[saveable.GetUniqueIdentifier()] = saveable.CaptureAsJtoken();
             }
@@ -129,7 +129,7 @@ namespace SDVA.Saving
         private void RestoreFromToken(JObject state)
         {
             IDictionary<string, JToken> stateDict = state;
-            foreach (JsonSaveableEntity saveable in FindObjectsOfType<JsonSaveableEntity>())
+            foreach (JsonSaveableEntity saveable in FindObjectsByType<JsonSaveableEntity>(FindObjectsSortMode.None))
             {
                 string id = saveable.GetUniqueIdentifier();
                 if (stateDict.ContainsKey(id))

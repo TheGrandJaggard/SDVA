@@ -17,7 +17,7 @@ namespace SDVA.SceneManagement
 
         private void Awake()
         {
-            savingWrapper = FindObjectOfType<SavingWrapper>();
+            savingWrapper = FindFirstObjectByType<SavingWrapper>();
             // player = FindObjectOfType<PlayerController>();
             
             savingWrapper.LoadLastScene();
