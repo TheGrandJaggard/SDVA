@@ -1,22 +1,16 @@
-﻿using System.Collections.Generic;
-
-namespace SDVA.Utils.UI.ItemMovement
+﻿namespace SDVA.Utils.UI.ItemMovement
 {
     /// <summary>
     /// Components that implement this interfaces can act as the source for
-    /// moving items by `DragItem` or `TODO put name here`.
+    /// moving items by `MoveItem`.
     /// </summary>
-    /// <typeparam name="T">The type that represents the item being dragged.</typeparam>
-    public interface IItemSource<T> where T : class
+    /// <typeparam name="T">The type that represents the item being moved.</typeparam>
+    public interface IItemSource<T>: IItemHolder<T> where T : class
     {
-        /// <summary>
-        /// What item type currently resides in this source?
-        /// </summary>
+        /// <returns>The item type currently held by this source.</returns>
         T GetItem();
 
-        /// <summary>
-        /// What is the quantity of items in this source?
-        /// </summary>
+        /// <returns>The number of items this source currently holds.</returns>
         int GetNumber();
 
         /// <summary>
@@ -26,9 +20,9 @@ namespace SDVA.Utils.UI.ItemMovement
         void RemoveItems(int number);
 
         /// <summary>
-        /// Gets related sources. (eg. other slots in the same inventory)
+        /// Gets related sources. (e.g. other slots in the same inventory)
         /// </summary>
         /// <returns>A list of related IItemSources.</returns>
-        List<IItemSource<T>> GetRelatedSources();
+        IItemSource<T>[] GetRelatedSources();
     }
 }

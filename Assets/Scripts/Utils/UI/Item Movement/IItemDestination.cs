@@ -1,11 +1,11 @@
 ﻿namespace SDVA.Utils.UI.ItemMovement
 {
     /// <summary>
-    /// Components that implement this interface can act as the destination for
-    /// moving items by `DragItem` or `TODO put name here`.
+    /// Components that implement this interfaces can act as the destination for
+    /// moving items by `MoveItem`.
     /// </summary>
-    /// <typeparam name="T">Item type.</typeparam>
-    public interface IItemDestination<T> where T : class
+    /// <typeparam name="T">The type that represents the item being moved.</typeparam>
+    public interface IItemDestination<T>: IItemHolder<T> where T : class
     {
         // Note: this does not depend on the current source item.
         // Note: things that only accept one item will always return '1' etc.

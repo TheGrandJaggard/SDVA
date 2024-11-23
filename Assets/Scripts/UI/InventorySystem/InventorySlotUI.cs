@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
-using SDVA.Utils.UI.ItemMovement;
 using SDVA.InventorySystem;
+using SDVA.Utils.UI.ItemMovement;
 
 namespace SDVA.UI.InventorySystem
 {
-    public class InventorySlotUI : MonoBehaviour, IItemHolder, IItemContainer<BaseItem>
+    public class InventorySlotUI : MonoBehaviour, IItemTooltipProvider, IItemContainer<BaseItem>
     {
         // CONFIG DATA
         [SerializeField] InventoryItemIcon icon;
@@ -35,11 +34,11 @@ namespace SDVA.UI.InventorySystem
 
         public void RemoveItems(int number) => inventory.RemoveFromSlot(slot, number);
 
-        public List<IItemSource<BaseItem>> GetRelatedSources()
+        public IItemSource<BaseItem>[] GetRelatedSources()
         {
             var related = transform.parent.GetComponentsInChildren<IItemSource<BaseItem>>().ToList();
             related.Remove(this);
-            return related;
+            return related.ToArray();
         }
     }
 }
