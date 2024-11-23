@@ -46,6 +46,17 @@ namespace SDVA.Utils.UI.ItemMovement
         /// </summary>
         /// <param name="source">The item source.</param>
         /// <param name="destination">The destination for items.</param>
+        /// <returns>The number of items added to destination.</returns>
+        public static int MoveTo(IItemSource<T> source, IItemDestination<T> destination)
+        {
+            return AttemptSimpleTransfer(source, destination);
+        }
+
+        /// <summary>
+        /// Attempt to move items from source to destination.
+        /// </summary>
+        /// <param name="source">The item source.</param>
+        /// <param name="destination">The destination for items.</param>
         /// <param name="number">The number of items to move.</param>
         /// <returns>The number of items added to destination.</returns>
         public static int MoveTo(IItemSource<T> source, IItemDestination<T> destination, int number)
@@ -54,31 +65,30 @@ namespace SDVA.Utils.UI.ItemMovement
         }
 
         /// <summary>
-        /// Attempt to move items from source to destination.
-        /// </summary>
-        /// <param name="source">The item source.</param>
-        /// <param name="destination">The destination for items.</param>
-        /// <returns>The number of items added to destination.</returns>
-        public static int MoveTo(IItemSource<T> source, IItemDestination<T> destination)
-        {
-            return AttemptSimpleTransfer(source, destination);
-        }
-
-        /// <summary>
-        /// Attempt to move all items from source inventory to destination.
+        /// Attempt to move all items matching source item from source inventory to destination.
         /// </summary>
         /// <param name="source">The item source.</param>
         /// <param name="destination">The destination for items.</param>
         /// <returns>The number of items added to destination.</returns>
         public static int MoveAllFromInventoryTo(IItemSource<T> source, IItemDestination<T> destination)
         {
-            var itemsMoved = 0;
-            var sourceItem = source.GetItem();
-            itemsMoved += AttemptSimpleTransfer(source, destination);
+            return MoveAllFromInventoryTo(source, destination, source.GetItem());
+        }
+
+        /// <summary>
+        /// Attempt to move all items of type item from source inventory to destination.
+        /// </summary>
+        /// <param name="source">The item source.</param>
+        /// <param name="destination">The destination for items.</param>
+        /// <param name="item">The item type to move from source inventory to destination.</param>
+        /// <returns>The number of items added to destination.</returns>
+        public static int MoveAllFromInventoryTo(IItemSource<T> source, IItemDestination<T> destination, T item)
+        {
+            var itemsMoved = AttemptSimpleTransfer(source, destination);
 
             foreach (var rSource in source.GetRelatedSources())
             {
-                if (ReferenceEquals(rSource.GetItem(), sourceItem))
+                if (ReferenceEquals(rSource.GetItem(), item))
                 {
                     itemsMoved += AttemptSimpleTransfer(rSource, destination);
                 }
