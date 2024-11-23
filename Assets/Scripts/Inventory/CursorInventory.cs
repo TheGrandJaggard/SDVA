@@ -17,7 +17,21 @@ namespace SDVA.UI.InventorySystem
 
         // PUBLIC
 
-        public int MaxAcceptable(BaseItem item) => item != null ? item.GetMaxStackSize() : 0;
+        public int MaxAcceptable(BaseItem item)
+        {
+            if (item == GetItem())
+            {
+                return item.GetMaxStackSize() - GetNumber();
+            }
+            else if (GetItem() == null)
+            {
+                return item.GetMaxStackSize();
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
         public int AddItems(BaseItem item, int number) => inventory.AddToSlot(slot, item, number);
 

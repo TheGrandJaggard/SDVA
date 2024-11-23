@@ -111,20 +111,24 @@ namespace SDVA.Utils.UI.ItemMovement
             var sourceItem = source.GetItem();
             var destinationNumber = destination.GetNumber();
             var destinationItem = destination.GetItem();
-            
-            // if both the source and destination can recive each other's items
+
+            source.RemoveItems(sourceNumber);
+            destination.RemoveItems(destinationNumber);
+
+            // If both the source and destination can recive each other's items
             if (sourceNumber <= destination.MaxAcceptable(sourceItem)
                 && destinationNumber <= source.MaxAcceptable(destinationItem))
             {
-                source.RemoveItems(sourceNumber);
-                destination.RemoveItems(destinationNumber);
-                
                 source.AddItems(destinationItem, destinationNumber);
                 destination.AddItems(sourceItem, sourceNumber);
-
                 return sourceNumber;
             }
-            return 0;
+            else // Put the items back
+            {
+                source.AddItems(sourceItem, sourceNumber);
+                destination.AddItems(destinationItem, destinationNumber);
+                return 0;
+            }
         }
 
         /// <summary>

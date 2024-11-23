@@ -24,7 +24,21 @@ namespace SDVA.UI.InventorySystem
             icon.SetItem(inventory.GetSlotItem(slot), inventory.GetSlotNumber(slot));
         }
 
-        public int MaxAcceptable(BaseItem item) => item.GetMaxStackSize();
+        public int MaxAcceptable(BaseItem item)
+        {
+            if (item == GetItem())
+            {
+                return item.GetMaxStackSize() - GetNumber();
+            }
+            else if (GetItem() == null)
+            {
+                return item.GetMaxStackSize();
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
         public int AddItems(BaseItem item, int number) => inventory.AddToSlot(slot, item, number);
 

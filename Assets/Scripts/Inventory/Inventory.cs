@@ -168,7 +168,7 @@ namespace SDVA.InventorySystem
             else
             {
                 var itemsAdded = Mathf.Clamp(number, 0, item.GetMaxStackSize());
-                
+
                 SetSlotItem(slot, item);
                 SetSlotNumber(slot, itemsAdded);
                 InvokeInventoryUpdateEvent();

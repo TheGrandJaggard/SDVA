@@ -7,10 +7,8 @@
     /// <typeparam name="T">The type that represents the item being moved.</typeparam>
     public interface IItemDestination<T>: IItemHolder<T> where T : class
     {
-        // Note: this does not depend on the current source item.
-        // Note: things that only accept one item will always return '1' etc.
         /// <summary>
-        /// How many of the given item can be held by the destination.
+        /// How many of the given item the destination can currently accept.
         /// If there is no limit Int.MaxValue should be returned.
         /// </summary>
         /// <param name="item">The item type to query on.</param>
