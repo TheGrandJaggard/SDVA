@@ -29,18 +29,11 @@ namespace SDVA.InventorySystem
         public Inventory GetInventory() => inv;
 
         #region Saving
-        [System.Serializable]
-        private struct InventorySlotRecord
-        {
-            public string itemID;
-            public int number;
-        }
-
         public JToken CaptureAsJToken()
         {
             JObject state = new JObject();
             IDictionary<string, JToken> stateDict = state;
-            for (int i = 0; i < baseInventorySize; i++)
+            for (int i = 0; i < inv.GetSize(); i++)
             {
                 if (inv.GetSlotItem(i) != null)
                 {
@@ -58,9 +51,10 @@ namespace SDVA.InventorySystem
         {
             if (state is JObject stateObject)
             {
-                inv = new Inventory(baseInventorySize);
                 IDictionary<string, JToken> stateDict = stateObject;
-                for (int i = 0; i < baseInventorySize; i++)
+                inv = new Inventory(Mathf.Max(stateDict.Count, baseInventorySize));
+
+                for (int i = 0; i < inv.GetSize(); i++)
                 {
                     if (stateDict.ContainsKey(i.ToString()) && stateDict[i.ToString()] is JObject itemState)
                     {
