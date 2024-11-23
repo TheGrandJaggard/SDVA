@@ -132,6 +132,22 @@ namespace SDVA.UI.InventorySystem
             return false;
         }
 
+        private void StartTransferMovement(InputAction.CallbackContext context)
+        {
+            foreach (var hitResult in RaycastMouse())
+            {
+                var hitObject = hitResult.gameObject;
+
+                // if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
+                //     (useClick || useDragging))
+                // {
+                //     var itemsMoved = MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory);
+                //     mostRecentSource = source;
+                //     if (itemsMoved > 0) { break; }
+                // }
+            }
+        }
+
         private void StartPartialMovement(InputAction.CallbackContext context)
         {
             foreach (var hitResult in RaycastMouse())
@@ -166,7 +182,19 @@ namespace SDVA.UI.InventorySystem
 
                 if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination))
                 {
+                    // Idea 1: If mostrecentsource contains items, and destination contains items, put our items back instead
+
+                    // Idea 2: If the destination can't take my items,
+                    // and my most recent source can't take the destination's items,
+                    // I won't be able to swap the items, so I'll abort
+                    if (destination.MaxAcceptable(cursorInventory.GetItem()) < cursorInventory.GetNumber() &&
+                        (mostRecentSource is not IItemContainer<BaseItem> mostRecentSourceContainer ||
+                        (mostRecentSourceContainer.MaxAcceptable((destination as IItemContainer<BaseItem>).GetItem()) <= 0)))
+                    {
+                        continue;
+                    }
                     var itemsMoved = MoveItem<BaseItem>.MoveBetween(cursorInventory, destination);
+
                     mostRecentDestination = destination;
                     if (itemsMoved > 0) { break; }
                 }
@@ -177,11 +205,15 @@ namespace SDVA.UI.InventorySystem
             {
                 if (mostRecentSource is IItemContainer<BaseItem> mostRecentSourceContainer)
                 {
-                    MoveItem<BaseItem>.MoveTo(cursorInventory, mostRecentSourceContainer);
+                    var itemsMoved = MoveItem<BaseItem>.MoveTo(cursorInventory, mostRecentSourceContainer);
+                    if (itemsMoved <= 0)
+                    {
+                        Debug.Log($"Drag ended but {cursorInventory.GetNumber()} items could not be returned to source container.");
+                    }
                 }
                 else
                 {
-                    Debug.LogWarning("Items destroyed because they could not be placed back where they came from after drag.");
+                    Debug.LogWarning($"Drag ended but {cursorInventory.GetNumber()} items could not be returned to source, as it is not a container.");
                 }
                 mostRecentSource = null;
             }
@@ -190,6 +222,7 @@ namespace SDVA.UI.InventorySystem
         private void CancelDrag(InputAction.CallbackContext context)
         {
             if (useClick || !useDragging) { return; }
+            if (cursorInventory.GetNumber() <= 0) { return; }
 
             if (mostRecentSource is IItemContainer<BaseItem> mostRecentSourceContainer)
             {
@@ -198,7 +231,7 @@ namespace SDVA.UI.InventorySystem
             }
             else
             {
-                Debug.LogWarning("Items destroyed because they could not be placed back where they came from after drag.");
+                Debug.LogWarning("Drag canceled but items could not be returned to source.");
             }
         }
 

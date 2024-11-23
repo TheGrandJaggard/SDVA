@@ -21,14 +21,9 @@ namespace SDVA.Utils.UI.ItemMovement
         {
             if (ReferenceEquals(destination, source)) { return 0; }
 
-            // Check for swappability
-            if (destination is IItemContainer<T> destinationContainer &&
-                source is IItemContainer<T> sourceContainer &&
-                sourceContainer.GetItem() != null &&
-                destinationContainer.GetItem() != null &&
-                !ReferenceEquals(sourceContainer.GetItem(), destinationContainer.GetItem()))
+            if (CanSwap(source, destination))
             {
-                var moved = AttemptSwap(sourceContainer, destinationContainer);
+                var moved = AttemptSwap(source as IItemContainer<T>, destination as IItemContainer<T>);
                 if (moved > 0) { return moved; }
             }
 
@@ -39,6 +34,22 @@ namespace SDVA.Utils.UI.ItemMovement
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// Checks for swappablility between a source and a destination.
+        /// Ensures that both the source and the destination are IItemContainers.
+        /// </summary>
+        /// <param name="holder1">The source or destination to check swappablility with holder2.</param>
+        /// <param name="holder2">The source or destination to check swappablility with holder1.</param>
+        public static bool CanSwap(IItemHolder<T> holder1, IItemHolder<T> holder2)
+        {
+            var result = holder2 is IItemContainer<T> destinationContainer &&
+                holder1 is IItemContainer<T> sourceContainer &&
+                sourceContainer.GetItem() != null &&
+                destinationContainer.GetItem() != null &&
+                !ReferenceEquals(sourceContainer.GetItem(), destinationContainer.GetItem());
+            return result;
         }
 
         /// <summary>
