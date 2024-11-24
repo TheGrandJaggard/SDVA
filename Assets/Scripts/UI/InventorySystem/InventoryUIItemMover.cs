@@ -60,20 +60,91 @@ namespace SDVA.UI.InventorySystem
 
         private void StartMovement(InputAction.CallbackContext context)
         {
-            if (timer != null && timer.IsRunning)
+            if (transferItemButton.ToInputAction().IsPressed())
             {
-                var moved = StartCollectAllMovement(context);
+                if (timer != null && timer.IsRunning)
+                {
+                    var moved = StartSendAllToOtherInventoryMovement(context);
 
-                if (!moved) { StartNormalMovement(context); }
+                    if (!moved) { StartSendToOtherInventoryMovement(context); }
+                }
+                else
+                {
+                    timer = new Timer(doubleClickTime);
+
+                    StartSendToOtherInventoryMovement(context);
+                }
             }
             else
             {
-                timer = new Timer(doubleClickTime);
+                if (timer != null && timer.IsRunning)
+                {
+                    var moved = StartCollectAllMovement(context);
 
-                StartNormalMovement(context);
+                    if (!moved) { StartNormalMovement(context); }
+                }
+                else
+                {
+                    timer = new Timer(doubleClickTime);
+
+                    StartNormalMovement(context);
+                }
             }
+        }
 
-            // if shift click...
+        private void StartSendToOtherInventoryMovement(InputAction.CallbackContext context)
+        {
+            foreach (var hitResult in RaycastMouse())
+            {
+                var hitObject = hitResult.gameObject;
+
+                if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination) &&
+                    useClick)
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveBetween(cursorInventory, destination);
+                    mostRecentDestination = destination;
+                    if (itemsMoved > 0) { break; }
+                }
+
+                if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
+                    (useClick || useDragging))
+                {
+                    var itemsMoved = MoveItem<BaseItem>.MoveBetween(source, cursorInventory);
+                    mostRecentSource = source;
+                    if (itemsMoved > 0) { break; }
+                }
+            }
+        }
+        private bool StartSendAllToOtherInventoryMovement(InputAction.CallbackContext context)
+        {
+            foreach (var hitResult in RaycastMouse())
+            {
+                var hitObject = hitResult.gameObject;
+
+                if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
+                    ReferenceEquals(source, mostRecentSource) &&
+                    (useClick || useDragging))
+                {
+                    var itemsMoved = cursorInventory.GetItem() != null
+                        ? MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory, cursorInventory.GetItem())
+                        : MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory);
+
+                    mostRecentSource = source;
+                    if (itemsMoved > 0) { return true; }
+                }
+                else if (hitObject.TryGetComponent<IItemContainer<BaseItem>>(out var container) &&
+                    ReferenceEquals(container, mostRecentDestination) &&
+                    (useClick || useDragging))
+                {
+                    var itemsMoved = cursorInventory.GetItem() != null
+                        ? MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory, cursorInventory.GetItem())
+                        : MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory);
+
+                    mostRecentSource = source;
+                    if (itemsMoved > 0) { return true; }
+                }
+            }
+            return false;
         }
 
         private void StartNormalMovement(InputAction.CallbackContext context)
