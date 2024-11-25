@@ -33,7 +33,7 @@ namespace SDVA.InventorySystem
         public GameObject SetupGui(Transform parent)
         {
             guiObject = Instantiate(guiPrefab, parent);
-            guiObject.GetComponentInChildren<OtherInventoryUI>().Setup(GetInventory());
+            guiObject.GetComponentInChildren<InventoryUI>().Setup(GetInventory());
 
             ChestOpen(true);
             return guiObject;
@@ -42,7 +42,7 @@ namespace SDVA.InventorySystem
         public void ShutDownGui()
         {
             ChestOpen(false);
-            guiObject.GetComponentInChildren<OtherInventoryUI>().ShutDown();
+            guiObject.GetComponentInChildren<InventoryUI>().ShutDown();
             Destroy(guiObject);
         }
     }

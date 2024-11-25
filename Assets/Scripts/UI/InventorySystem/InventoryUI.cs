@@ -1,6 +1,6 @@
-using System;
 using SDVA.InventorySystem;
 using SDVA.Utils;
+using SDVA.Utils.UI.ItemMovement;
 using UnityEngine;
 
 namespace SDVA.UI.InventorySystem
@@ -9,7 +9,7 @@ namespace SDVA.UI.InventorySystem
     /// To be placed on the root of the inventory UI. Handles spawning all the
     /// inventory slot prefabs.
     /// </summary>
-    public class OtherInventoryUI : MonoBehaviour
+    public class InventoryUI : MonoBehaviour, IItemDestination<BaseItem>
     {
         // CONFIG DATA
         [SerializeField] InventorySlotUI inventoryItemPrefab;
@@ -30,6 +30,12 @@ namespace SDVA.UI.InventorySystem
         {
             inventory.InventoryUpdated -= Redraw;
         }
+
+        // PUBLIC
+
+        public int AddItems(BaseItem item, int number) => inventory.AddToAnySlot(item, number);
+
+        public int MaxAcceptable(BaseItem item) => inventory.GetSpaceRemaining(item);
 
         // PRIVATE
 

@@ -12,7 +12,7 @@ namespace SDVA.Utils.UI.ItemMovement
         // PUBLIC
         
         /// <summary>
-        /// Attempt to move items from source to destination.
+        /// Attempt to move items from source to destination and vice versa.
         /// </summary>
         /// <param name="source">The item source.</param>
         /// <param name="destination">The destination for items.</param>
