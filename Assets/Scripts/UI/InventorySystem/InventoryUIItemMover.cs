@@ -42,48 +42,48 @@ namespace SDVA.UI.InventorySystem
 
         private void OnEnable()
         {
-            moveItemButton.ToInputAction().Enable();
-            singleItemButton.ToInputAction().Enable();
-            moveItemButtonRelease.ToInputAction().Enable();
+            moveItemButton.action.Enable();
+            singleItemButton.action.Enable();
+            moveItemButtonRelease.action.Enable();
 
-            moveItemButton.ToInputAction().performed += StartMovement; // includes variants
-            singleItemButton.ToInputAction().performed += StartPartialMovement;
+            moveItemButton.action.performed += StartMovement; // includes variants
+            singleItemButton.action.performed += StartPartialMovement;
 
-            moveItemButtonRelease.ToInputAction().performed += EndDrag;
-            moveItemButtonRelease.ToInputAction().canceled += CancelDrag;
+            moveItemButtonRelease.action.performed += EndDrag;
+            moveItemButtonRelease.action.canceled += CancelDrag;
         }
 
         private void OnDisable()
         {
-            moveItemButton.ToInputAction().Disable();
-            singleItemButton.ToInputAction().Disable();
-            moveItemButtonRelease.ToInputAction().Disable();
+            moveItemButton.action.Disable();
+            singleItemButton.action.Disable();
+            moveItemButtonRelease.action.Disable();
         }
 
         private void StartMovement(InputAction.CallbackContext context)
         {
-            if (transferItemButton.ToInputAction().IsPressed())
+            if (transferItemButton.action.IsPressed())
             {
-                StartSendToOtherInventoryMovement(context);
+                TransferMovement(context);
             }
             else
             {
                 if (timer != null && timer.IsRunning)
                 {
-                    var moved = StartCollectAllMovement(context);
+                    var moved = CollectAllMovement(context);
 
-                    if (!moved) { StartNormalMovement(context); }
+                    if (!moved) { NormalMovement(context); }
                 }
                 else
                 {
                     timer = new Timer(doubleClickTime);
 
-                    StartNormalMovement(context);
+                    NormalMovement(context);
                 }
             }
         }
 
-        private void StartSendToOtherInventoryMovement(InputAction.CallbackContext context)
+        private void TransferMovement(InputAction.CallbackContext context)
         {
             foreach (var hitResult in RaycastMouse())
             {
@@ -108,7 +108,7 @@ namespace SDVA.UI.InventorySystem
             }
         }
 
-        private void StartNormalMovement(InputAction.CallbackContext context)
+        private void NormalMovement(InputAction.CallbackContext context)
         {
             foreach (var hitResult in RaycastMouse())
             {
@@ -132,7 +132,7 @@ namespace SDVA.UI.InventorySystem
             }
         }
 
-        private bool StartCollectAllMovement(InputAction.CallbackContext context)
+        private bool CollectAllMovement(InputAction.CallbackContext context)
         {
             foreach (var hitResult in RaycastMouse())
             {
