@@ -33,6 +33,8 @@ namespace SDVA.UI.InventorySystem
 
         // PUBLIC
 
+        public Inventory GetInventory() => inventory;
+
         public int AddItems(BaseItem item, int number) => inventory.AddToAnySlot(item, number);
 
         public int MaxAcceptable(BaseItem item) => inventory.GetSpaceRemaining(item);

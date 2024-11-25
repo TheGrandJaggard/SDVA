@@ -6,16 +6,13 @@ namespace SDVA.InventorySystem
     /// <summary>
     /// Provides storage for the player inventory. A configurable number of
     /// slots are available.
-    ///
-    /// This component should be placed on the GameObject tagged "Player".
-    /// This component should be generic enough to be placed on chests
     /// </summary>
     public class Inventory
     {
         // STATE
         InventorySlot[] slots;
 
-        public struct InventorySlot
+        private struct InventorySlot
         {
             public BaseItem item;
             public int number;

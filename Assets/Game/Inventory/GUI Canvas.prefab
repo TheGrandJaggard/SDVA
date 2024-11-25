@@ -514,6 +514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorInventory: {fileID: 2731552381847347969}
+  inventoryUIController: {fileID: 3301166908110975939}
   useClick: 1
   useDragging: 0
   useDragSpread: 1

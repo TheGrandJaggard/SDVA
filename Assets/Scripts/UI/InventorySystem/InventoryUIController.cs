@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SDVA.UI.InventorySystem
@@ -33,6 +34,16 @@ namespace SDVA.UI.InventorySystem
             // Debug.Log("Removing GUI from other tab");
             provider.ShutDownGui();
             guis.Remove(provider);
+        }
+
+        /// <returns>
+        /// All inventories in left GUI pannels.
+        /// </returns>
+        public InventoryUI[] GetInventoriesInGui()
+        {
+            var guisObjects = guis.Select(gui => gui.Value);
+            var inventories = guisObjects.SelectMany(guiObject => guiObject.GetComponentsInChildren<InventoryUI>());
+            return inventories.ToArray();
         }
     }
 }

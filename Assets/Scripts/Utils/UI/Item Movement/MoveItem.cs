@@ -97,11 +97,11 @@ namespace SDVA.Utils.UI.ItemMovement
         {
             var itemsMoved = AttemptSimpleTransfer(source, destination);
 
-            foreach (var rSource in source.GetRelatedSources())
+            foreach (var relatedSource in source.GetRelatedSources())
             {
-                if (ReferenceEquals(rSource.GetItem(), item))
+                if (ReferenceEquals(relatedSource.GetItem(), item))
                 {
-                    itemsMoved += AttemptSimpleTransfer(rSource, destination);
+                    itemsMoved += AttemptSimpleTransfer(relatedSource, destination);
                 }
             }
             return itemsMoved;
@@ -150,6 +150,7 @@ namespace SDVA.Utils.UI.ItemMovement
         /// <returns>The number of items added to destination.</returns>
         private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination)
         {
+            if (source.GetItem() == null) { return 0; }
             var transferred = destination.AddItems(source.GetItem(), source.GetNumber());
             source.RemoveItems(transferred);
 
@@ -165,6 +166,7 @@ namespace SDVA.Utils.UI.ItemMovement
         /// <returns>The number of items added to destination.</returns>
         private static int AttemptSimpleTransfer(IItemSource<T> source, IItemDestination<T> destination, int number)
         {
+            if (source.GetItem() == null) { return 0; }
             var transferred = destination.AddItems(source.GetItem(), Mathf.Clamp(number, 0, source.GetNumber()));
             source.RemoveItems(transferred);
 

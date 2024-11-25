@@ -5,12 +5,14 @@ using SDVA.Utils;
 using SDVA.Utils.UI.ItemMovement;
 using SDVA.InventorySystem;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SDVA.UI.InventorySystem
 {
     public class InventoryUIItemMover : MonoBehaviour
     {
         [SerializeField] CursorInventory cursorInventory;
+        [SerializeField] InventoryUIController inventoryUIController;
         
         [Header("Item Movement Settings:")]
         [Tooltip("Whether items can be picked up by clicking.")]
@@ -62,18 +64,7 @@ namespace SDVA.UI.InventorySystem
         {
             if (transferItemButton.ToInputAction().IsPressed())
             {
-                if (timer != null && timer.IsRunning)
-                {
-                    var moved = StartSendAllToOtherInventoryMovement(context);
-
-                    if (!moved) { StartSendToOtherInventoryMovement(context); }
-                }
-                else
-                {
-                    timer = new Timer(doubleClickTime);
-
-                    StartSendToOtherInventoryMovement(context);
-                }
+                StartSendToOtherInventoryMovement(context);
             }
             else
             {
@@ -98,53 +89,23 @@ namespace SDVA.UI.InventorySystem
             {
                 var hitObject = hitResult.gameObject;
 
-                if (hitObject.TryGetComponent<IItemDestination<BaseItem>>(out var destination) &&
-                    useClick)
-                {
-                    var itemsMoved = MoveItem<BaseItem>.MoveBetween(cursorInventory, destination);
-                    mostRecentDestination = destination;
-                    if (itemsMoved > 0) { break; }
-                }
-
                 if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
+                    source.GetItem() != null &&
                     (useClick || useDragging))
                 {
-                    var itemsMoved = MoveItem<BaseItem>.MoveBetween(source, cursorInventory);
+                    var targetInventory = inventoryUIController.GetInventoriesInGui().FirstOrDefault(
+                            otherInv => otherInv.GetInventory().GetItemsContained(source.GetItem()) > 0
+                            && otherInv.MaxAcceptable(source.GetItem()) > 0);
+                    targetInventory ??= inventoryUIController.GetInventoriesInGui().FirstOrDefault(
+                            otherInv => otherInv.MaxAcceptable(source.GetItem()) > 0);
+
+                    if (targetInventory == null) { return; }
+
+                    var itemsMoved = MoveItem<BaseItem>.MoveTo(source, targetInventory);
                     mostRecentSource = source;
                     if (itemsMoved > 0) { break; }
                 }
             }
-        }
-        private bool StartSendAllToOtherInventoryMovement(InputAction.CallbackContext context)
-        {
-            foreach (var hitResult in RaycastMouse())
-            {
-                var hitObject = hitResult.gameObject;
-
-                if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
-                    ReferenceEquals(source, mostRecentSource) &&
-                    (useClick || useDragging))
-                {
-                    var itemsMoved = cursorInventory.GetItem() != null
-                        ? MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory, cursorInventory.GetItem())
-                        : MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory);
-
-                    mostRecentSource = source;
-                    if (itemsMoved > 0) { return true; }
-                }
-                else if (hitObject.TryGetComponent<IItemContainer<BaseItem>>(out var container) &&
-                    ReferenceEquals(container, mostRecentDestination) &&
-                    (useClick || useDragging))
-                {
-                    var itemsMoved = cursorInventory.GetItem() != null
-                        ? MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory, cursorInventory.GetItem())
-                        : MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory);
-
-                    mostRecentSource = source;
-                    if (itemsMoved > 0) { return true; }
-                }
-            }
-            return false;
         }
 
         private void StartNormalMovement(InputAction.CallbackContext context)
@@ -201,22 +162,6 @@ namespace SDVA.UI.InventorySystem
                 }
             }
             return false;
-        }
-
-        private void StartTransferMovement(InputAction.CallbackContext context)
-        {
-            foreach (var hitResult in RaycastMouse())
-            {
-                var hitObject = hitResult.gameObject;
-
-                // if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
-                //     (useClick || useDragging))
-                // {
-                //     var itemsMoved = MoveItem<BaseItem>.MoveAllFromInventoryTo(source, cursorInventory);
-                //     mostRecentSource = source;
-                //     if (itemsMoved > 0) { break; }
-                // }
-            }
         }
 
         private void StartPartialMovement(InputAction.CallbackContext context)
