@@ -58,7 +58,7 @@ namespace SDVA.UI.InventorySystem
                 catch (UnityException)
                 {
                     child = Instantiate(inventoryItemPrefab, transform).transform;
-                    child.SetAsFirstSibling();
+                    child.SetSiblingIndex(goI);
                     goI++;
                 }
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using SDVA.Utils.UI.ItemMovement;
+﻿using SDVA.Utils.UI.ItemMovement;
 using SDVA.InventorySystem;
 using UnityEngine;
 

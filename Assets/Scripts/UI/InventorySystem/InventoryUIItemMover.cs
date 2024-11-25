@@ -62,7 +62,8 @@ namespace SDVA.UI.InventorySystem
 
         private void StartMovement(InputAction.CallbackContext context)
         {
-            if (transferItemButton.action.IsPressed())
+            if (transferItemButton.action.IsPressed() &&
+                useClick)
             {
                 TransferMovement(context);
             }
@@ -91,7 +92,7 @@ namespace SDVA.UI.InventorySystem
 
                 if (hitObject.TryGetComponent<IItemSource<BaseItem>>(out var source) &&
                     source.GetItem() != null &&
-                    (useClick || useDragging))
+                    useClick)
                 {
                     var targetInventory = inventoryUIController.GetInventoriesInGui().FirstOrDefault(
                             otherInv => otherInv.GetInventory().GetItemsContained(source.GetItem()) > 0
